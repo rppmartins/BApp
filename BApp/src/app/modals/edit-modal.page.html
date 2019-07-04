@@ -1,0 +1,59 @@
+<ion-header no-border class="header">
+    <ion-toolbar mode="md" style="padding-left:10px;">
+        <ion-title style="margin-top: 5px; float: left;">{{header_name}}</ion-title>
+        <ion-icon style="width: 30px; height: 30px; float: right; color: var(--ion-color-ba)" name="checkmark" (click)=save()></ion-icon>
+        <ion-icon style="width: 30px; height: 30px; float: right; color: var(--ion-color-ba)" name="close" (click)=cancel()></ion-icon>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-item lines="none">
+        <ion-input name="user_name" type="name" maxlength="100" value={{user_info.user_name}} (keypress)="permitOnlyLetters($event.charCode)" (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none" >
+        <ion-input name="nif" type="number" value={{user_info.nif}} (keypress)="permitMaxSize($event, 9)" (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none" >
+        <ion-input name="nationality" type="text" maxlength="20" value={{user_info.nationality}} (keypress)="permitOnlyLetters($event.charCode)" (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none">
+        <ion-select id="city" name="city" placeholder="Cidade *" style="padding-left:0%" value={{user_info.city}} (ionChange)="change_value($event.target)" ngModel required>
+            <div *ngFor="let city of cities">
+                <ion-select-option value={{city}}>{{city}}</ion-select-option>
+            </div>
+        </ion-select>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none">
+        <ion-input name="address" type="address" maxlength="65" value={{user_info.address}} (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item style="width: 40%; float: left; margin-right: 5%" lines="none">
+        <ion-input style="margin-right: -5%" name="frst_zip" type="number" value={{user_info.frst_zip}} (keypress)="permitMaxSize($event, 4)" (change)="change_value($event.target)"></ion-input>
+        -
+        <ion-input style="margin-left: 5%" name="scnd_zip" type="number" value={{user_info.scnd_zip}} (keypress)="permitMaxSize($event, 3)" (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <ion-item style="width: 55%; float: right; margin-bottom: 5%" lines="none">
+        <ion-input name="thrd_zip" type="text" maxlength="42" value={{user_info.thrd_zip}} (keypress)="permitOnlyLetters($event.charCode)" (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none">
+        <ion-input name="cellphone" type="tel" maxlength="15" value={{user_info.cellphone}} (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none">
+        <ion-input name="phone" type="tel" maxlength="15" value={{user_info.phone}} (change)="change_value($event.target)"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none">
+        <ion-input type="email" disabled="true" value="{{user_info.email}}"></ion-input>
+    </ion-item>
+    <p></p>
+    <ion-item lines="none">
+        <ion-datetime name="birth_date" style="padding-left:0%;" display-format="D MMM YYYY" value={{user_info.birth_date}} (ionChange)="change_value($event.target)"></ion-datetime>
+    </ion-item>
+    <p></p>
+</ion-content>

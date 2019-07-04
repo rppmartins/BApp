@@ -1,0 +1,54 @@
+.header{
+    border-style:solid; 
+    border-width: 0px 0px 0.5px 0px; 
+    border-color: lightgray
+}
+
+.notification-icon{
+    float:right; 
+    padding-right:10px; 
+    width:25px; 
+    height:25px; 
+    color:var(--ion-color-ba)
+}
+
+.avatar{
+    height: 150px; 
+    width: 150px; 
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--ion-color-ba);
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.user-info{
+    color: black
+}
+
+.upload-badge{
+    background-color: #fff;
+    height: 30px; 
+    width: 30px; 
+    border: 2px solid #fff;
+    border-radius:50%;
+    box-shadow: 0 0 20px var(--ion-color-ba);
+    margin-top: -30px;
+    margin-left: 120px;
+}
+
+.upload-icon{
+    color:var(--ion-color-ba); 
+    width: 22px; 
+    height: 22px; 
+    margin: 0.5px -6px;
+}
+
+.lil-icons{
+    height: 15px; 
+    width: 15px; 
+    float: right; 
+    margin-right: 15px; 
+    color: var(--ion-color-ba)
+}

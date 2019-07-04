@@ -1,0 +1,45 @@
+<ion-content>
+    <div class="vertical-aligned" ion-fixed>
+        <ion-card style="box-shadow: 0 0 0 0; padding:10px">
+            <ion-card-header>
+                <ion-img 
+                    src="/assets/ba_logo.jpg">
+                </ion-img>
+                <h2 text-center style="color:var(--ion-color-ba)">Alimente esta Ideia</h2>
+                <p></p>
+                <h5 text-center>LogIn/SignIn</h5>
+            </ion-card-header>
+            
+            <ion-card-content>   
+                
+                <ion-button
+                mode="ios" 
+                class="facebook_button"
+                fill="outline"
+                expand="block"
+                (click)="fakeloginWithFacebook()"
+                >
+                    Entrar com  <ion-icon name="logo-facebook"></ion-icon>acebook
+                </ion-button>
+
+                <p text-center > <b>OU</b> </p>
+
+                <ion-button 
+                mode="ios"
+                class="google_button" 
+                fill="outline" 
+                expand="block"
+                (click)="fakeloginWithGoogle()"
+                >
+                    Entrar com  <ion-icon name="logo-google"></ion-icon>oogle
+                </ion-button>
+
+            </ion-card-content>
+        </ion-card>
+
+        <div text-center>
+            <a href="https://www.bancoalimentar.pt/">Site oficial do Banco Alimentar</a>
+        </div>
+        
+    </div>
+</ion-content>  

@@ -1,0 +1,22 @@
+<ion-header no-border class="header">
+  <ion-toolbar mode="md" style="padding-left:10px;">
+      <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
+      <ion-title style="float: left;">QR Scan</ion-title>
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content padding>
+
+  <ion-card style="box-shadow: 0 0 0 0; padding:10px;">
+
+    <ion-img src="/assets/ba_qrcode.png"></ion-img>
+
+  </ion-card>
+
+  <div padding text-center>
+    <ion-button class="rescan" shape="round" mode="md" (click)="scanCode()">
+      <ion-icon style="width:25px; height:25px;" slot="icon-only" name="refresh"></ion-icon>
+    </ion-button> 
+  </div>
+   
+</ion-content> 

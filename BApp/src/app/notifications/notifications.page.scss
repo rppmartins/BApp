@@ -1,0 +1,17 @@
+.header{
+    border-style:solid; 
+    border-width: 0px 0px 0.5px 0px; 
+    border-color: lightgray
+}
+
+.back-arrow{
+    width: 25px; 
+    height: 25px; 
+    float: right; 
+    color: var(--ion-color-ba)
+}
+
+ion-item{
+    padding-left: 10px;
+    padding-right: 10px;
+}

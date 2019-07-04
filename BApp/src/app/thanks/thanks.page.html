@@ -1,0 +1,42 @@
+<ion-header no-border class="header">
+    <ion-toolbar mode="md" style="padding-left:10px; padding-right: 10px">
+      <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
+      <ion-title style="float: left;">Agradecimento</ion-title>    
+      <ion-icon class="back-arrow" name="arrow-back" mode="ios" (click)="goBack()"></ion-icon>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form  #form="ngForm" (ngSubmit)="submit(form)">
+      <ion-grid>
+        <ion-row justify-content-center>
+          <ion-col align-self-center>
+            <div text-center>
+                <h5 style="color:var(--ion-color-ba)">54ª Campanha de Recolha de Alimentos</h5>
+            </div>
+            <p></p>
+            <div padding>
+                <ion-label>
+                    Obrigado por ajudar esta causa.
+                </ion-label>                
+                <p></p>
+                <ion-label>    
+                    O Banco Alimentar agradece a sua participação nesta campanha.
+                </ion-label>
+            </div>
+            <div padding>
+                <p text-center *ngIf="form.valid">
+                    <ion-label>
+                        <b style="color: green">Obrigado pela sua colaboração!</b>
+                        <p></p>
+                        <b>Cá o esperamos na próxima Campanha!</b>
+                    </ion-label>
+                </p>
+                <ion-button mode="ios" type="submit" [disabled]="form.invalid" expand="block">Ok</ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </ion-content>
+  

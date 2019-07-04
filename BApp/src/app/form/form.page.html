@@ -1,0 +1,91 @@
+<ion-header no-border class="header">
+    <ion-toolbar mode="md" style="padding-left:10px;">
+        <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
+        <ion-title style="float: left;">Inscrição</ion-title>    
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form #form="ngForm" (ngSubmit)="register(form)">
+      <ion-grid>
+        <ion-row justify-content-center>
+          <ion-col align-self-center>
+            <div text-center>
+                <h5 style="color:var(--ion-color-ba)">Ficha de Incrição do Voluntário</h5>
+            </div>
+            <div padding>
+                <ion-item lines="none">
+                    <ion-input name="name" type="name" maxlength="100" placeholder="Nome Completo *" (keypress)="permitOnlyLetters($event.charCode)" ngModel required></ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none" >
+                    <ion-input id="nif" name="nif" type="number" placeholder="Numero identificação fiscal *" (keypress)="permitMaxSize($event, 9)" ngModel required></ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none" >
+                    <ion-input id="nationality" name="nationality" type="text" maxlength="20" placeholder="Nacionalidade" (keypress)="permitOnlyLetters($event.charCode)" ngModel></ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none">
+                    <ion-select id="city" name="city" placeholder="Cidade *" style="padding-left:0%" ngModel required>
+                        <div *ngFor="let city of cities">
+                            <ion-select-option value={{city}}>{{city}}</ion-select-option>
+                        </div>
+                    </ion-select>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none">
+                    <ion-input id="address" name="address" type="address" maxlength="65" placeholder="Morada *" ngModel required></ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item style="width: 50%; float: left; margin-right: 5%" lines="none">
+                    <ion-input id="zipcode_frst_number" style="margin-right: -5%" name="zipcode_frst_number" type="number" placeholder="Codigo" (keypress)="permitMaxSize($event, 4)" ngModel required></ion-input>
+                    -
+                    <ion-input id="zipcode_scnd_number" style="margin-left: 5%" name="zipcode_scnd_number" type="number" placeholder="Postal *" (keypress)="permitMaxSize($event, 3)" ngModel required></ion-input>
+                </ion-item>
+                <ion-item style="width: 45%; float: right; margin-bottom: 5%" lines="none">
+                    <ion-input id="locality" name="locality" placeholder="Localidade *" type="text" maxlength="42" (keypress)="permitOnlyLetters($event.charCode)" ngModel required></ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none">
+                    <ion-input id="cellphone" name="cellphone" type="tel" maxlength="15" placeholder="Telemóvel *" ngModel required></ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none">
+                    <ion-input id="phone" name="phone" type="tel" maxlength="15" placeholder="Telefone" ngModel></ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none">
+                    <ion-input name="email" type="email" disabled="true" ngModel required>{{v_email}}</ion-input>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none">
+                    <ion-datetime name="birthdate" display-format="D MMM YYYY" placeholder="Data de nascimento *" style="padding-left:0%;" ngModel required></ion-datetime>
+                </ion-item>
+                <p></p>
+                <ion-item lines="none">
+                    <ion-textarea name="observations" placeholder="Observations" clearOnEdit="true" ngModel></ion-textarea>
+                </ion-item>
+                <p></p>
+                <ion-radio-group name="spot" ngModel required>
+                    <ion-item lines="none" class="top-radio">
+                        <ion-label>Armazém</ion-label>
+                        <ion-radio mode="md" slot="end" value="warehouse" checked></ion-radio>
+                    </ion-item>
+                    <ion-item lines="none" class="bottom-radio">
+                        <ion-label>Supermercado</ion-label>
+                        <ion-radio mode="md" slot="end" value="supermarket"></ion-radio>
+                    </ion-item>
+                </ion-radio-group>
+            </div>
+
+            <p text-center style="color:red">Todos os parametros assinalados com * são obrigatórios</p>
+
+            <div padding>
+                <ion-button mode="ios" type="submit" [disabled]="form.invalid" expand="block">Registar</ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+</ion-content>

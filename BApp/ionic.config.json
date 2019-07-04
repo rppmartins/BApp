@@ -1,5 +1,7 @@
 {
   "name": "BApp",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

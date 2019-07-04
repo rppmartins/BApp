@@ -1,0 +1,47 @@
+<ion-header no-border class="header">
+    <ion-toolbar mode="md" style="padding-left:10px; padding-right: 10px">
+        <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
+        <ion-title style="float: left;">Notificações</ion-title>
+        <ion-icon class="back-arrow" mode="ios" name="arrow-back" (click)="goBack()"></ion-icon>            
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-refresher slot="fixed"
+    (ionRefresh)="refresh($event)">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        refreshingSpinner="circles">
+        </ion-refresher-content>
+    </ion-refresher>
+    <ion-list>
+        <ion-item-sliding *ngFor="let notification of notifications" #item>
+            <ion-item lines="none" mode="ios" button=true
+            (click)="goToNotification(notification.id, notification.c_id, notification.type)">
+                <div *ngIf="!notification.read; else elseBlock">
+                    <h5 style="color:var(--ion-color-ba)">{{notification.name}}</h5>
+                </div>
+                <ng-template #elseBlock>
+                    <h5>{{notification.name}}</h5>
+                </ng-template>
+            </ion-item>
+            <ion-item-options side="end">
+                <ion-item-option color="danger"
+                (click)=delete(item,notification.id)>
+                    <ion-icon mode="md" name="trash"></ion-icon>
+                </ion-item-option>
+            </ion-item-options>
+            <ion-item-options side="start"
+            (ionSwipe)=read(item,notification.id)>
+                <ion-item-option color="primary">
+                    <div *ngIf="!notification.read; else readBlock">
+                        <ion-icon mode="md" name="mail"></ion-icon>
+                    </div>
+                    <ng-template #readBlock>
+                        <ion-icon mode="md" name="mail-open"></ion-icon>
+                    </ng-template>
+                </ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+</ion-content>

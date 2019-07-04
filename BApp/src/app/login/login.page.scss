@@ -1,0 +1,13 @@
+ion-button.facebook_button{
+    --border-color: var(--ion-color-facebook);
+    --color: var(--ion-color-facebook);
+
+    --background-activated: var(--ion-color-facebook)
+}
+
+ion-button.google_button{
+    --border-color: var(--ion-color-google);
+    --color: var(--ion-color-google);
+
+    --background-activated: var(--ion-color-google)
+}

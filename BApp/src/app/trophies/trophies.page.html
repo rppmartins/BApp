@@ -1,0 +1,34 @@
+<ion-header no-border class="header">
+  <ion-toolbar mode="md" style="padding-left:10px;">
+      <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
+      <ion-title style="float: left;">Troféus</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content text-center>
+
+  <ion-img style="width: 100px; height: 100px; margin: auto; padding-top: 20px; padding-bottom: 20px" src="/assets/trophie.png"></ion-img>
+
+  <ion-list lines="none">
+    <ion-list-header>
+      <ion-label style="margin-left: 25%; color:var(--ion-color-ba)">Top 20 Participantes</ion-label>
+      <ion-icon class="scroll-icon" name="list"></ion-icon>
+    </ion-list-header>
+    <ion-content [scrollEvents]="true" style="height: 400px;">
+      <div *ngFor="let participant of participants; let i = index;">
+        <ion-chip outline style="width: 70%; border-color: var(--ion-color-ba)">
+          <ion-label style="padding-right: 5px"><b>#{{i + 1}}</b></ion-label>
+          <ion-avatar>
+            <img src={{participant.avatar}}>
+          </ion-avatar>
+          <ion-label style="margin: auto">{{participant.name}}</ion-label>
+          <ion-label >
+            {{participant.participations}}
+            <ion-icon outline style="color: yellow" name="trophy"></ion-icon>
+          </ion-label>
+        </ion-chip>
+      </div> 
+    </ion-content>
+  </ion-list>
+
+</ion-content>

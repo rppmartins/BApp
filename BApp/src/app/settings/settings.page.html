@@ -1,0 +1,49 @@
+<ion-header no-border class="header">
+    <ion-toolbar mode="md" style="padding-left:10px;">
+        <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
+        <ion-title style="float: left;">Preferências</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    
+  <ion-list lines="none">
+    <ion-list-header>
+      <ion-label style="color:var(--ion-color-ba)">Mostrar no Perfil</ion-label>
+    </ion-list-header>
+    
+    <ion-item>
+      <ion-label text-left><h3>Nacionalidade</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="nationality"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label text-left><h3>Localidade</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="locality"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label text-left><h3>Morada</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="address"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label text-left><h3>Codigo Postal</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="zipcode"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label text-left><h3>Telemóvel</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="cellphone"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label text-left><h3>Telefone</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="phone"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label text-left><h3>Email</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="email"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label text-left><h3>Data de Nascimento</h3></ion-label>
+      <ion-toggle mode="md" [(ngModel)]="birthdate"></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
