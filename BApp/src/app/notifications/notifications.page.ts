@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpRequestService } from '../services/http-request.service'
 import { DataService } from '../services/data.service'
+import { Storage } from '@ionic/storage'
 
 @Component({
   selector: 'app-notifications',
@@ -10,17 +11,20 @@ import { DataService } from '../services/data.service'
 })
 export class NotificationsPage implements OnInit{
 
-  private v_id
-  private notifications
-  
   constructor(
     private router: Router,
     private http : HttpRequestService,
-    private data : DataService
-  ){}
+    private data : DataService,
+    private storage : Storage
+  ){
+    this.storage.get('user').then(user => this.v_id = user.id)
+  }
 
+  private v_id
+  private notifications
+  
   ngOnInit(){
-    this.v_id = 1
+    console.log(this.v_id)
     this.getNotifications()
   }
 
@@ -94,16 +98,6 @@ export class NotificationsPage implements OnInit{
     }).reverse()
   }
 
-  deleteInfo(id){
-    this.http.fetchPromise('delete', `notifications/${id}`, '')
-      .then(_ => {
-        this.notifications = this.notifications.filter((n) => {
-          return n.id != id
-        })
-      })
-      .catch(_ => console.log('something went wrong with deleting notification...'))
-  }
-
   saveInfo(){
     this.notifications.forEach(notification => {
       if(notification.changed) {
@@ -118,11 +112,21 @@ export class NotificationsPage implements OnInit{
           Read : notification.read
         }
 
-        this.http.fetchPromise('put', `notifications/${notification.id}`, body)
+        this.http.fetchPromise('put', `volunteers/${this.v_id}/notifications/${notification.id}`, body)
           .then(_ => console.log('Saved'))
           .catch(err => console.log('something went wrong with saving notification...'))
       }
     })
+  }
+
+  deleteInfo(id){
+    this.http.fetchPromise('delete', `volunteers/${this.v_id}/notifications/${id}`, '')
+      .then(_ => {
+        this.notifications = this.notifications.filter((n) => {
+          return n.id != id
+        })
+      })
+      .catch(_ => console.log('something went wrong with deleting notification...'))
   }
 
   goToNotification(id, c_id, type){

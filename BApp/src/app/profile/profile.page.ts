@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { EditModal } from '../modals/edit-modal.page';
 import { HttpRequestService } from '../services/http-request.service'
 import { DataService } from '../services/data.service'
-
+import { Storage } from '@ionic/storage'
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +13,18 @@ import { DataService } from '../services/data.service'
 })
 export class ProfilePage {
 
-  private id
+  constructor(
+    private router : Router,
+    public modalController: ModalController,
+    private http : HttpRequestService,
+    private data : DataService,
+    private storage : Storage
+  ){
+    this.stored_info = this.storage.get('user')
+  } 
+
+  private stored_info
+  
   private user
   private user_view
 
@@ -22,18 +33,9 @@ export class ProfilePage {
 
   private notifications_flag
 
-  constructor(
-    private router : Router,
-    public modalController: ModalController,
-    private http : HttpRequestService,
-    private data : DataService
-  ){} 
-
   ngOnInit(){
     this.user_view = {}
     this.participations = {}
-
-    this.id = 1
 
     this.notifications_flag = false
 
@@ -46,18 +48,31 @@ export class ProfilePage {
     this.checkNotifications()
   }
 
+  getStoredInfo(){
+    this.storage.get('user')
+      .then(info => this.stored_info = info)
+      .catch(err => console.log('something went wrong getting stored info...'))
+  }
+
   getUser(){
-    this.http.fetchPromise('get', `volunteers/${this.id}`, '')
+    this.http.fetchPromise('get', `volunteers/${this.stored_info.email}?filter=Email`, '')
       .then(data => {
         this.user = this.formatUser(data.message)
         this.setView()
       })
+      .then(_ => { if(this.stored_info.id == undefined) this.storeInfo() })
       .catch(err => console.log(`something went wrong with user! : ${err}`))
+  }
+
+  storeInfo(){
+    this.stored_info['id'] = this.user.id
+    this.storage.set('user', this.stored_info)
   }
 
   formatUser(data){
     return {
-      profile_url : `picture/${this.id}`,
+      id : data['Id'],
+      profile_url : `picture/${data['Id']}`,
       user_name : data['Name'],
       nif: data['NIF'],
       birth_date : data['Birth_Date'],
@@ -115,7 +130,7 @@ export class ProfilePage {
   }
 
   getParticipations(){
-    this.http.fetchPromise('get', `/volunteers/${this.id}/participations`, '')
+    this.http.fetchPromise('get', `/volunteers/${this.stored_info.id}/participations`, '')
       .then(data => this.participations = this.formatParticipations(data.message))
       .catch(err => console.log('something went wrong getting participations...'))
   }
@@ -128,7 +143,7 @@ export class ProfilePage {
   }
 
   getHistory(){
-    this.http.fetchPromise('get', `volunteers/${this.id}/history`, '')
+    this.http.fetchPromise('get', `volunteers/${this.stored_info.id}/history`, '')
       .then(data => {
         this.history = this.formatHistory(data.message)
       })
@@ -145,7 +160,7 @@ export class ProfilePage {
   }
 
   checkNotifications() {
-    this.http.fetchPromise('get', `volunteers/${this.id}/notifications`, '')
+    this.http.fetchPromise('get', `volunteers/${this.stored_info.id}/notifications`, '')
       .then(data => {
         this.data.setData('notifications', data.message)
       
@@ -189,7 +204,7 @@ export class ProfilePage {
       'ZipCode': this.user['name']
     })
 
-    this.http.fetchPromise('put', `volunteers/${this.id}`, body)
+    this.http.fetchPromise('put', `volunteers/${this.stored_info.id}`, body)
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }

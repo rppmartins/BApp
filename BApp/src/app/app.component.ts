@@ -47,5 +47,5 @@ export class AppComponent {
   }
 
   navigateToLoginPage() { this.router.navigate(['/login']) }
-  navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
+  navigateToProfilePage() { this.router.navigate(['/tabs']) }
 }

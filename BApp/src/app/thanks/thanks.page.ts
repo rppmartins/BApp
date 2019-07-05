@@ -25,7 +25,7 @@ export class ThanksPage {
     if(submit){
       this.data.setData('n_id', this.n_id)
     }
-    this.router.navigate(["/notifications"]) 
+    this.router.navigate(["/notifications"])
   }
 
   submit(form?){

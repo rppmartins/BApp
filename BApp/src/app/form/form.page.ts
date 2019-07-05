@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { HttpRequestService } from '../services/http-request.service';
+import { Component } from '@angular/core'
+import { Router, RouterModule } from '@angular/router'
+import { HttpRequestService } from '../services/http-request.service'
+import { DataService } from '../services/data.service'
+import { Storage } from '@ionic/storage'
+
 
 @Component({
   selector: 'app-form',
@@ -10,33 +13,31 @@ import { HttpRequestService } from '../services/http-request.service';
 export class FormPage {
   constructor(
     private router : Router,
-    private http : HttpRequestService
-  ){}
-
-  private v_email
-  private cities = []
-
-  ngOnInit(){
-    this.getLoginInfo()
-    this.getCities()
+    private http : HttpRequestService,
+    private data : DataService,
+    private storage : Storage
+  ){
+    this.login_info = this.data.getData('user')
   }
 
-  getLoginInfo(){
-    //get from native storage
-    this.v_email = "rppmartins1996@hotmail.com"
+  private login_info
+  private cities
+
+  ngOnInit(){
+    this.getCities()
   }
 
   getCities(){
     this.http.fetchCitiesPromise()
-      .then(data => this.formatCities(data['data']))
-      .then(data => this.cities = data.filter(city => {
+      .then(cities => this.formatCities(cities['data']))
+      .then(cities => this.cities = cities.filter(city => {
         return city.split('-')[1] == undefined
       }))
       .catch(err => console.log('something went wrong getting cities...'))
   }
 
-  formatCities(data){
-    return data.map(city_obj => {
+  formatCities(cities){
+    return cities.map(city_obj => {
       return city_obj['local']
     })
   }
@@ -49,7 +50,8 @@ export class FormPage {
     this.http.fetchPromise('post','volunteers', body)
       .then(res => {
         console.log(res)
-        this.router.navigate(['/tabs'])
+        this.storage.set('user', this.login_info)
+        this.router.navigate(['/tabs/profile'])
       })
       .catch(err => {
         console.log(`something went wrong with form! : ${err}`)
@@ -68,7 +70,7 @@ export class FormPage {
       'ZipCode': `${info.zipcode_frst_number}-${info.zipcode_scnd_number} ${info.locality.toUpperCase()}`,
       'Phone': info.cellphone,
       'Telephone': info.phone,
-      'Email': this.v_email,
+      'Email': this.login_info['email'],
       'Birth_Date': info.birthdate.split("T")[0],
       'Observations': info.observations,
       'Spot': info.spot,

@@ -43,9 +43,11 @@
                     -
                     <ion-input id="zipcode_scnd_number" style="margin-left: 5%" name="zipcode_scnd_number" type="number" placeholder="Postal *" (keypress)="permitMaxSize($event, 3)" ngModel required></ion-input>
                 </ion-item>
-                <ion-item style="width: 45%; float: right; margin-bottom: 5%" lines="none">
+                <ion-item style="width: 45%; float: right" lines="none">
                     <ion-input id="locality" name="locality" placeholder="Localidade *" type="text" maxlength="42" (keypress)="permitOnlyLetters($event.charCode)" ngModel required></ion-input>
                 </ion-item>
+                <p></p>
+                <ion-item></ion-item>
                 <p></p>
                 <ion-item lines="none">
                     <ion-input id="cellphone" name="cellphone" type="tel" maxlength="15" placeholder="Telemóvel *" ngModel required></ion-input>
@@ -56,7 +58,7 @@
                 </ion-item>
                 <p></p>
                 <ion-item lines="none">
-                    <ion-input name="email" type="email" disabled="true" ngModel required>{{v_email}}</ion-input>
+                    <ion-input name="email" type="email" disabled="true" ngModel required>{{login_info.email}}</ion-input>
                 </ion-item>
                 <p></p>
                 <ion-item lines="none">

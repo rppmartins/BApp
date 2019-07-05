@@ -84,7 +84,6 @@ export class LogoutPage {
   }
   
   navigateToLoginPage() { this.router.navigate(['/login']) }
-
   navigateToProfilePage() { this.router.navigate(['/tabs']) }
 
 }

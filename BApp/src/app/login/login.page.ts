@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { DataService } from '../services/data.service'
 import { isNumber } from 'util';
 
 //import { GooglePlus } from '@ionic-native/google-plus/ngx';
-//import { Facebook } from '@ionic-native/facebook/ngx';
-//import { NativeStorage } from '@ionic-native/native-storage/ngx';
+//import { Facebook } from '@ionic-native/facebook/ngx'
 
 @Component({
   selector: 'app-login',
@@ -18,10 +18,10 @@ export class LoginPage {
     private router: Router, 
     private loadingController : LoadingController,
     private storage : Storage,
+    private data : DataService,
 
     //private google : GooglePlus,
-    //private facebook : Facebook,
-    //private nativeStorage : NativeStorage
+    //private facebook : Facebook
   )
   {}
 
@@ -29,15 +29,8 @@ export class LoginPage {
   users = [
     {
       id : 1,
-      name: "Rodrigo Martins",
-      email: "rppmartins1996@gmail.com",
-      token: "trcyub5467yhb"
-    },
-    {
-      id : 2,
-      name: "Banco Alimentar",
-      email: "bancoalimentarapp@gmail.com",
-      token: "s35e4d6ryuvbi"
+      email: "rppmartins1996@hotmail.com",
+      //token: "trcyub5467yhb"
     }
   ]
   
@@ -127,17 +120,15 @@ export class LoginPage {
 
   fakeloginWithFacebook(){
     const user = {
-      name : 'Rodrigo Martins',
-      email : 'rppmartins1996@gmail.com',
-      token : 'trcyub5467yhb'
+      email : 'rppmartins1996@hotmail.com',
+      //token : 'trcyub5467yhb'
     }
     this.fakeLogin(user)
   }
   fakeloginWithGoogle(){
     const user = {
-      name : 'Rodrigo Martins',
-      email : 'rppmartins1996@hotmail.com',
-      token : 'trcyub5467yhb'
+      email : 'rppmartins1996@gmail.com',
+      //token : 'trcyub5467yhb'
     }
     this.fakeLogin(user)
   }
@@ -147,31 +138,32 @@ export class LoginPage {
     let route = 'form'
 
     const volunteer = this.checkVolunteerExistence(user)
-    debugger
     const id = volunteer != undefined ? volunteer.id : null
 
     if(id != null && isNumber(id) && id >= 0){
       user['id'] = id
+      this.storage.set('user', user)
+      
       route = 'profile'
     }
+    else {
+      console.log(user)
+      this.data.setData('user', user)
+    }
 
-    this.store(user)
     this.navigate(route)
   }
 
   checkVolunteerExistence(user_info){
     return this.users.find(user => {
-      console.log(user.email == user_info.email)
       return user.email == user_info.email
     })
   }
 
-  store(user){ this.storage.set('user', user) }
-
   navigate(route){
     const routes = {
       'form' : '/form',
-      'profile' : '/tabs/profile'
+      'profile' : '/tabs'
     }
 
     return this.router.navigate([routes[route]])
