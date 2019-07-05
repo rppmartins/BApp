@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, Platform } from '@ionic/angular';
+import { Storage } from '@ionic/storage'
+
 //import { GooglePlus } from '@ionic-native/google-plus/ngx';
 //import { Facebook } from '@ionic-native/facebook/ngx';
 //import { NativeStorage } from '@ionic-native/native-storage/ngx';
@@ -14,6 +16,8 @@ export class LogoutPage {
   constructor(
     private router: Router, 
     private alertController: AlertController,
+    private storage : Storage,
+
     //private google : GooglePlus,
     //private facebook : Facebook,
     //private nativeStorage : NativeStorage
@@ -51,6 +55,7 @@ export class LogoutPage {
   }
 
   executeLogout(){
+    this.storage.remove('user')
     /*
     this.nativeStorage.getItem('user').then( user => {
       

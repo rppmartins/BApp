@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { Router } from '@angular/router';
-//import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { Storage } from '@ionic/storage'
 
 @Component({
   selector: 'app-root',
@@ -17,26 +17,35 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private router: Router,
-    //private nativeStorage : NativeStorage
+    private storage : Storage,
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
-      /*
-      this.nativeStorage.getItem('user')
-        .then(data => {
-          this.router.navigate(['/tabs'])
-          this.splashScreen.hide()
-        }, 
-        error => {
-          this.router.navigate(['/login'])
-          this.splashScreen.hide()
-      });
-      */
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
+    this.platform.ready()
+      .then(async () => {
+      
+        if(await this.checkLogin()){
+          this.navigateToProfilePage()
+          this.splashScreen.hide();
+        }
+        else{ 
+          this.navigateToLoginPage()
+          this.splashScreen.hide();
+        }
+
+        this.statusBar.styleDefault();
+        this.splashScreen.hide();
+      })
   }
+  
+  checkLogin(){
+    return this.storage.get('user')
+      .then(user => { return user != null })
+      .catch(err => console.log('something went wrong getting v_id...'))
+  }
+
+  navigateToLoginPage() { this.router.navigate(['/login']) }
+  navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
 }

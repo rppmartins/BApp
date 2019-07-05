@@ -86,7 +86,7 @@ export class NotificationsPage implements OnInit{
       return {
         id : value['Id'],
         c_id : value['C_Id'],
-        name : value['Name'],
+        name : value['C_Name'],
         type : value['Type'],
         read : value['Read'],
         changed : false

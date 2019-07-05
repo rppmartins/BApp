@@ -49,14 +49,11 @@ export class InvitationPage {
     console.log('c_id: ' + this.c_id)
 
     const body = {
-      'CampaignId' : 1,
-      'VolunteerId' : 1,
+      'CampaignId' : this.c_id,
+      'VolunteerId' : this.v_id,
       'Participation' : form['participation'],
       'DayTime' : form['day_time'] != undefined ? form['day_time'] : null
     }
-
-    //NOT DONE
-    console.log('Should be posting somethiing into de API')
 
     this.http.fetchPromise('post', `invitations`, body)
       .catch(err => console.log('something went wrong submitting questionnaire...'))

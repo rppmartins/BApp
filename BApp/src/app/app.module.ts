@@ -9,12 +9,13 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-//Services
-import { HttpClientModule } from '@angular/common/http';
-
 //Requirements
+import { IonicStorageModule } from '@ionic/storage';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+
+//Services
+import { HttpClientModule } from '@angular/common/http';
 
 //Components
 import { EditModal } from './modals/edit-modal.page'
@@ -29,7 +30,8 @@ import { EditModal } from './modals/edit-modal.page'
   ],
   imports: [
     BrowserModule, 
-    IonicModule.forRoot(), 
+    IonicModule.forRoot(),
+    IonicStorageModule.forRoot(), //SharedPreferences
     AppRoutingModule,
     HttpClientModule,
   ],

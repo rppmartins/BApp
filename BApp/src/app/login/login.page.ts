@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+import { isNumber } from 'util';
+
 //import { GooglePlus } from '@ionic-native/google-plus/ngx';
 //import { Facebook } from '@ionic-native/facebook/ngx';
 //import { NativeStorage } from '@ionic-native/native-storage/ngx';
@@ -14,6 +17,8 @@ export class LoginPage {
   constructor(
     private router: Router, 
     private loadingController : LoadingController,
+    private storage : Storage,
+
     //private google : GooglePlus,
     //private facebook : Facebook,
     //private nativeStorage : NativeStorage
@@ -21,14 +26,15 @@ export class LoginPage {
   {}
 
   FB_APP_ID = 2275465636046649;
-
   users = [
     {
-      name: "Rodrigo",
+      id : 1,
+      name: "Rodrigo Martins",
       email: "rppmartins1996@gmail.com",
       token: "trcyub5467yhb"
     },
     {
+      id : 2,
       name: "Banco Alimentar",
       email: "bancoalimentarapp@gmail.com",
       token: "s35e4d6ryuvbi"
@@ -119,22 +125,55 @@ export class LoginPage {
 		return await loading.present();
   }
 
+  fakeloginWithFacebook(){
+    const user = {
+      name : 'Rodrigo Martins',
+      email : 'rppmartins1996@gmail.com',
+      token : 'trcyub5467yhb'
+    }
+    this.fakeLogin(user)
+  }
+  fakeloginWithGoogle(){
+    const user = {
+      name : 'Rodrigo Martins',
+      email : 'rppmartins1996@hotmail.com',
+      token : 'trcyub5467yhb'
+    }
+    this.fakeLogin(user)
+  }
+
+  fakeLogin(form){
+    let user = form
+    let route = 'form'
+
+    const volunteer = this.checkVolunteerExistence(user)
+    debugger
+    const id = volunteer != undefined ? volunteer.id : null
+
+    if(id != null && isNumber(id) && id >= 0){
+      user['id'] = id
+      route = 'profile'
+    }
+
+    this.store(user)
+    this.navigate(route)
+  }
 
   checkVolunteerExistence(user_info){
-    debugger
-    
-    return this.users.some(user => user_info.email.equals(user.email))
+    return this.users.find(user => {
+      console.log(user.email == user_info.email)
+      return user.email == user_info.email
+    })
   }
 
-  fakeloginWithGoogle(){
-    this.navigateToFormPage()
-  }
-  fakeloginWithFacebook(){
-    this.navigateToProfilePage()
-  }
+  store(user){ this.storage.set('user', user) }
 
-  navigateToFormPage() { this.router.navigate(['/form']) }
-  
-  navigateToProfilePage() { this.router.navigate(['/tabs']) }
+  navigate(route){
+    const routes = {
+      'form' : '/form',
+      'profile' : '/tabs/profile'
+    }
 
+    return this.router.navigate([routes[route]])
+  }
 }

@@ -13,13 +13,13 @@ export class FormPage {
     private http : HttpRequestService
   ){}
 
+  private v_email
+  private cities = []
+
   ngOnInit(){
     this.getLoginInfo()
     this.getCities()
   }
-
-  private v_email
-  private cities = []
 
   getLoginInfo(){
     //get from native storage

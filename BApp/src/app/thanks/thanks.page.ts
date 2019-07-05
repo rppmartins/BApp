@@ -28,7 +28,7 @@ export class ThanksPage {
     this.router.navigate(["/notifications"]) 
   }
 
-  submit(form){
+  submit(form?){
     this.goBack(true)
   }
 }
