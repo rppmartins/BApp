@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import { Router } from '@angular/router';
 import { AlertController, Platform } from '@ionic/angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications/ngx';
@@ -13,14 +14,32 @@ import { HttpRequestService } from '../services/http-request.service';
 export class ScanPage {
 
   constructor(
+    private router : Router,
+    private platform : Platform,
     private qrScanner: BarcodeScanner, 
     private alertController: AlertController,
     private localNotifications: LocalNotifications,
     private request : HttpRequestService
   ){}
 
+  private subBackEvent
+
+  ngOnInit(){
+    this.initBackButtonHandler()
+  }
+
   ionViewWillEnter(){ 
     this.scanCode(); 
+  }
+
+  ionViewWillLeave(){
+    this.subBackEvent && this.subBackEvent();
+  }
+
+  initBackButtonHandler(){
+    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
+      this.router.navigate(['/tabs/profile'])
+    })
   }
 
   betaScan(){

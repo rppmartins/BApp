@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { DataService } from '../services/data.service'
 import { isNumber } from 'util';
@@ -14,8 +14,10 @@ import { isNumber } from 'util';
   styleUrls: ['login.page.scss']
 })
 export class LoginPage {
+
   constructor(
-    private router: Router, 
+    private router: Router,
+    private platform : Platform,
     private loadingController : LoadingController,
     private storage : Storage,
     private data : DataService,
@@ -24,6 +26,8 @@ export class LoginPage {
     //private facebook : Facebook
   )
   {}
+
+  private subBackEvent
 
   FB_APP_ID = 2275465636046649;
   users = [
@@ -34,6 +38,22 @@ export class LoginPage {
     }
   ]
   
+  ngOnInit(){
+    this.initBackButtonHandler()
+  }
+
+  ionViewWillLeave(){
+    // Unregister the custom back button action for this page
+    this.subBackEvent && this.subBackEvent();
+  }
+
+  initBackButtonHandler() {
+    this.subBackEvent = this.platform.backButton.subscribe(999999,  () => {
+        //alert("back pressed home" + this.constructor.name)
+        navigator['app'].exitApp()
+    })
+  }
+
   /*
   async loginWithGoogle(){
     const loading = await this.loadingController.create({

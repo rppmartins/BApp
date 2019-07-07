@@ -32,7 +32,7 @@ export class LogoutPage {
 
     const alert = await this.alertController.create({
       header: 'Logout',
-      message: 'Tem a certeza que quer sair da aplicação?',
+      message: 'Tem a certeza que quer terminar sessão?',
       buttons: [
         {
           text: 'Não',

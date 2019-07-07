@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
 import { Router, RouterModule } from '@angular/router'
+import { Platform } from '@ionic/angular';
 import { HttpRequestService } from '../services/http-request.service'
 import { DataService } from '../services/data.service'
 import { Storage } from '@ionic/storage'
@@ -13,6 +14,7 @@ import { Storage } from '@ionic/storage'
 export class FormPage {
   constructor(
     private router : Router,
+    private platform : Platform,
     private http : HttpRequestService,
     private data : DataService,
     private storage : Storage
@@ -22,9 +24,21 @@ export class FormPage {
 
   private login_info
   private cities
+  private subBackEvent
 
   ngOnInit(){
     this.getCities()
+    this.initBackButtonHandler()
+  }
+
+  ionViewWillLeave(){
+    this.subBackEvent && this.subBackEvent();
+  }
+
+  initBackButtonHandler() {
+    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
+      this.router.navigate(['login'])
+    })
   }
 
   getCities(){

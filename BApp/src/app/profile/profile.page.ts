@@ -1,6 +1,6 @@
 import { Component, ɵConsole } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, LoadingController, ToastController } from '@ionic/angular';
+import { Platform, ModalController, LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { EditModal } from '../modals/edit-modal.page';
 import { HttpRequestService } from '../services/http-request.service'
 import { DataService } from '../services/data.service'
@@ -19,9 +19,11 @@ export class ProfilePage {
     private storage : Storage,
     private data : DataService, 
     private http : HttpRequestService,
+    private platform : Platform,
     private modalController: ModalController,
     private loadingController : LoadingController,
     private toastController : ToastController,
+    private alertController : AlertController
   ){} 
 
   private stored_info
@@ -36,6 +38,7 @@ export class ProfilePage {
   private new_image_flag = false
 
   private loading
+  private subBackEvent
 
   async ngOnInit(){
     await this.getStoredInfo()
@@ -47,13 +50,52 @@ export class ProfilePage {
 
     this.notifications_flag = false
 
-    this.getUser()
+    await this.getUser()
     this.getParticipations()
     this.getHistory()
+
+    this.initBackButtonHandler()
   }
 
   ionViewWillEnter(){
     this.checkNotifications()
+  }
+
+  ionViewWillLeave(){
+    console.log('leaving')
+    this.subBackEvent && this.subBackEvent();
+  }
+
+  initBackButtonHandler() {
+    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
+      this.showBackAlert()
+    })
+  }
+
+  async showBackAlert(){
+
+    const alert = await this.alertController.create({
+      header: 'Logout',
+      message: 'Tem a certeza que quer sair?',
+      buttons: [
+        {
+          text: 'Não',
+          role: 'cancel',
+          handler: () => {
+            //
+          }
+        },
+        {
+          text: 'Sim',
+          handler: () => {
+            navigator['app'].exitApp()
+          }
+        }
+      ],
+      mode: 'ios'
+    });
+
+    await alert.present();
   }
 
   getStoredInfo(){
@@ -66,7 +108,7 @@ export class ProfilePage {
   }
 
   getUser(){
-    this.http.fetchPromise('get', `volunteers/${this.stored_info.email}?filter=Email`, '')
+    return this.http.fetchPromise('get', `volunteers/${this.stored_info.email}?filter=Email`, '')
       .then(data => {
         this.user = this.formatUser(data.message)
         this.setView()
@@ -191,7 +233,10 @@ export class ProfilePage {
       image => {
         const this_image = this.formatImage(image)
         if(this.storeInfo['profile_url'] == undefined){
+
           this.stored_info['profile_url'] = this_image
+          this.storage.set('user', this.stored_info)
+          
           this.new_image_flag = true
         }
         this.user_view['profile_url'] = this_image

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpRequestService } from '../services/http-request.service'
 import { DataService } from '../services/data.service'
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-questionnaire',
@@ -9,12 +10,9 @@ import { DataService } from '../services/data.service'
   styleUrls: ['questionnaires.page.scss']
 })
 export class QuestionnairePage {
-
-  private c_id
-  private n_id
-
   constructor(
     public router: Router,
+    private platform : Platform,
     private route : ActivatedRoute,
     private http : HttpRequestService,
     private data : DataService
@@ -27,8 +25,27 @@ export class QuestionnairePage {
 
     this.n_id = this.route.snapshot.paramMap.get('id')
   }
+  
+  private c_id
+  private n_id
 
-  goBack(submit){ 
+  private subBackEvent
+
+  ngOnInit(){
+    this.initBackButtonHandler()
+  }
+
+  ionViewWillLeave(){
+    this.subBackEvent && this.subBackEvent();
+  }
+
+  initBackButtonHandler(){
+    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
+      this.goBack()
+    })
+  }
+
+  goBack(submit?){ 
     if(submit){
       this.data.setData('n_id', this.n_id)
     }

@@ -39,6 +39,12 @@ export class AppComponent {
         this.statusBar.styleDefault();
         this.splashScreen.hide();
       })
+
+      /*
+      this.platform.backButton.subscribeWithPriority(999990,  () => {
+        alert("back pressed");
+      });
+      */
   }
   
   checkLogin(){

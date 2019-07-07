@@ -3,6 +3,7 @@ import { Router, ActivatedRoute} from '@angular/router';
 import { HttpRequestService } from '../services/http-request.service'
 import { DataService } from '../services/data.service'
 import { Storage } from '@ionic/storage'
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-invitation',
@@ -13,6 +14,7 @@ export class InvitationPage {
 
   constructor(
     private router: Router,
+    private platform : Platform,
     private route : ActivatedRoute,
     private http : HttpRequestService,
     private data : DataService,
@@ -27,14 +29,28 @@ export class InvitationPage {
     this.n_id = this.route.snapshot.paramMap.get('id')
   }
 
-  async ngOnInit(){
-    await this.getStoredInfo()
-      .then(user => this.v_id = user.id)
-  }
-
   private v_id
   private c_id
   private n_id
+
+  private subBackEvent  
+  
+  async ngOnInit(){
+    await this.getStoredInfo()
+      .then(user => this.v_id = user.id)
+
+    this.initBackButtonHandler()
+  }
+
+  ionViewWillLeave(){
+    this.subBackEvent && this.subBackEvent();
+  }
+
+  initBackButtonHandler(){
+    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
+      this.goBack()
+    })
+  }
   
   getStoredInfo(){
     return this.storage.get('user')
