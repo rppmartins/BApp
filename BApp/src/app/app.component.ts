@@ -27,12 +27,13 @@ export class AppComponent {
       .then(async () => {
       
         if(await this.checkLogin()){
-          this.navigateToProfilePage()
           this.splashScreen.hide();
+          this.navigateToProfilePage()
+          
         }
         else{ 
-          this.navigateToLoginPage()
           this.splashScreen.hide();
+          this.navigateToLoginPage()
         }
 
         this.statusBar.styleDefault();
@@ -47,5 +48,5 @@ export class AppComponent {
   }
 
   navigateToLoginPage() { this.router.navigate(['/login']) }
-  navigateToProfilePage() { this.router.navigate(['/tabs']) }
+  navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
 }

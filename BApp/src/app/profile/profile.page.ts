@@ -1,10 +1,11 @@
 import { Component, ɵConsole } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, LoadingController, ToastController } from '@ionic/angular';
 import { EditModal } from '../modals/edit-modal.page';
 import { HttpRequestService } from '../services/http-request.service'
 import { DataService } from '../services/data.service'
 import { Storage } from '@ionic/storage'
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -15,13 +16,13 @@ export class ProfilePage {
 
   constructor(
     private router : Router,
-    public modalController: ModalController,
+    private storage : Storage,
+    private data : DataService, 
     private http : HttpRequestService,
-    private data : DataService,
-    private storage : Storage
-  ){
-    this.stored_info = this.storage.get('user')
-  } 
+    private modalController: ModalController,
+    private loadingController : LoadingController,
+    private toastController : ToastController,
+  ){} 
 
   private stored_info
   
@@ -32,8 +33,15 @@ export class ProfilePage {
   private history
 
   private notifications_flag
+  private new_image_flag = false
 
-  ngOnInit(){
+  private loading
+
+  async ngOnInit(){
+    await this.getStoredInfo()
+      .then(user => this.stored_info = user)
+      .then(user => console.log(user))
+
     this.user_view = {}
     this.participations = {}
 
@@ -49,9 +57,12 @@ export class ProfilePage {
   }
 
   getStoredInfo(){
-    this.storage.get('user')
-      .then(info => this.stored_info = info)
-      .catch(err => console.log('something went wrong getting stored info...'))
+    return this.storage.get('user')
+      .then(res => {
+        if(res.profile_url == '' || res.profile_url == undefined)
+          res['profile_url'] = "/assets/default_profile.jpg"
+        return res
+      })
   }
 
   getUser(){
@@ -92,10 +103,13 @@ export class ProfilePage {
     let header_name = `${full_name[0]} `
     if(full_name.length > 1) header_name +=  `${full_name[full_name.length-1]}`
 
+    const image = this.stored_info['profile_url'] == undefined ? 
+      "/assets/default_profile.jpg" : this.stored_info['profile_url']
+
     this.user_view = {
       header_name : header_name,
       name : this.user['user_name'],
-      profile_url: this.user['profile_url'],
+      profile_url: image,
       info : {
         'Numero identificação fiscal: ':`${this.user['nif']}`,
         'Idade: ':`${this.getAge(this.user['birth_date'])} anos`,
@@ -130,7 +144,7 @@ export class ProfilePage {
   }
 
   getParticipations(){
-    this.http.fetchPromise('get', `/volunteers/${this.stored_info.id}/participations`, '')
+    this.http.fetchPromise('get', `volunteers/${this.stored_info.id}/participations`, '')
       .then(data => this.participations = this.formatParticipations(data.message))
       .catch(err => console.log('something went wrong getting participations...'))
   }
@@ -170,6 +184,98 @@ export class ProfilePage {
       .catch(err => console.log('something went wrong with check notifications...'))
   }
 
+  uploadImage(){
+    const camera = navigator['camera']
+
+    camera.getPicture(
+      image => {
+        const this_image = this.formatImage(image)
+        if(this.storeInfo['profile_url'] == undefined){
+          this.stored_info['profile_url'] = this_image
+          this.new_image_flag = true
+        }
+        this.user_view['profile_url'] = this_image
+        this.upload(image);
+      },
+      err => console.log(err),
+      {
+        sourceType: camera['PictureSourceType'].PHOTOLIBRARY,
+        destinationType: camera['DestinationType'].FILE_URI,
+        quality: 100,
+        encodingType: camera['EncodingType'].JPEG,
+      }
+    )
+  }
+
+  formatImage(url){
+    debugger
+    if (!url) { return url }
+    if (url.startsWith('/')) { return window['WEBVIEW_SERVER_URL'] + '/_app_file_' + url }
+    if (url.startsWith('file://')) { return window['WEBVIEW_SERVER_URL'] + url.replace('file://', '/_app_file_') }
+    if (url.startsWith('content://')) { return window['WEBVIEW_SERVER_URL'] + url.replace('content:/', '/_app_content_') }
+    return url;
+  }
+
+  async upload(image_uri: any) {
+    this.loading = await this.loadingController.create({
+      message: 'Uploading...'
+    });
+
+    this.loading.present();
+
+    window['resolveLocalFileSystemURL'](
+      image_uri,
+      entry => {
+        entry['file'](file => this.readFile(file))
+      }
+    )
+  }
+
+  readFile(image_file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const form_data = new FormData();
+      const image_blob = new Blob([reader.result], {type: image_file.type});
+      form_data.append('file', image_blob, image_file.name);
+      this.postData(form_data);
+    };
+    reader.readAsArrayBuffer(image_file);
+  }
+
+  postData(data) {
+    debugger
+    const body = {
+      'VoluntaryId' : 1,
+      'VoluntaryImage' : data
+    }
+    const method = this.new_image_flag ? 'post' : 'put'
+
+    this.http.fetchPromise(method, `picture`, body)
+      .then(res => {
+        finalize(this.loading.dismiss())
+        this.showToast(true)
+      })
+      .catch(e => this.showToast(false))
+  }
+
+  async showToast(uploaded) {
+    if (uploaded) {
+      const toast = await this.toastController.create({
+        message: 'Upload successful',
+        duration: 3000,
+        position: 'bottom'
+      });
+      toast.present();
+    } else {
+      const toast = await this.toastController.create({
+        message: 'Upload failed',
+        duration: 3000,
+        position: 'bottom'
+      });
+      toast.present();
+    }
+  }
+
   async presentEditModal(){
     const modal = await this.modalController.create({
       component : EditModal,
@@ -194,7 +300,7 @@ export class ProfilePage {
     let body = JSON.stringify({
       'Name': this.user['name'],
       'NIF': this.user['nif'],
-      'Picture': this.user['profile_url'],
+      //'Picture': this.user['profile_url'],
       'Phone': this.user['cellphone'],
       'Telephone': this.user['phone'],
       'Birth_Date': this.user['birthdate'],

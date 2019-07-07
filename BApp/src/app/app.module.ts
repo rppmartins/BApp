@@ -13,6 +13,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { Camera } from '@ionic-native/Camera/ngx';
+import { File } from '@ionic-native/File/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
 
 //Services
 import { HttpClientModule } from '@angular/common/http';
@@ -31,7 +35,7 @@ import { EditModal } from './modals/edit-modal.page'
   imports: [
     BrowserModule, 
     IonicModule.forRoot(),
-    IonicStorageModule.forRoot(), //SharedPreferences
+    IonicStorageModule.forRoot(), //Storage aka SharedPreferences
     AppRoutingModule,
     HttpClientModule,
   ],
@@ -41,6 +45,10 @@ import { EditModal } from './modals/edit-modal.page'
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     BarcodeScanner,       //used to scan QR Codes
     LocalNotifications,   //used to send Notifications
+    Camera,               //used to access camera
+    File,                 //used to upload file
+    WebView,              //??
+    FilePath,
   ],
   bootstrap: [AppComponent]
 })

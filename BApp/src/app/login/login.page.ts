@@ -163,7 +163,7 @@ export class LoginPage {
   navigate(route){
     const routes = {
       'form' : '/form',
-      'profile' : '/tabs'
+      'profile' : '/tabs/profile'
     }
 
     return this.router.navigate([routes[route]])

@@ -18,8 +18,6 @@ export class InvitationPage {
     private data : DataService,
     private storage : Storage
   ){
-    this.storage.get('user').then(user => this.v_id = user.id)
-
     this.route.queryParams.subscribe(_ => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.c_id = this.router.getCurrentNavigation().extras.state.c_id;
@@ -29,10 +27,19 @@ export class InvitationPage {
     this.n_id = this.route.snapshot.paramMap.get('id')
   }
 
+  async ngOnInit(){
+    await this.getStoredInfo()
+      .then(user => this.v_id = user.id)
+  }
+
   private v_id
   private c_id
   private n_id
   
+  getStoredInfo(){
+    return this.storage.get('user')
+  }
+
   goBack(submit?){
     if(submit){
       this.data.setData('n_id', this.n_id)
@@ -46,6 +53,8 @@ export class InvitationPage {
   }
 
   saveInfo(form){
+    console.log('v_id: ' + this.v_id + ', n_id: ' + this.n_id + ' & c_id: ' + this.c_id)
+
     const body = {
       'CampaignId' : this.c_id,
       'VolunteerId' : this.v_id,

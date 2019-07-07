@@ -16,20 +16,24 @@ export class NotificationsPage implements OnInit{
     private http : HttpRequestService,
     private data : DataService,
     private storage : Storage
-  ){
-    this.storage.get('user').then(user => this.v_id = user.id)
-  }
+  ){}
 
   private v_id
   private notifications
   
-  ngOnInit(){
-    console.log(this.v_id)
+  async ngOnInit(){
+    await this.getStoredInfo()
+    .then(user => this.v_id = user.id)
+    
     this.getNotifications()
   }
 
   ionViewWillEnter(){
     this.checkSubmission()
+  }
+
+  getStoredInfo(){
+    return this.storage.get('user')
   }
 
   checkSubmission(){

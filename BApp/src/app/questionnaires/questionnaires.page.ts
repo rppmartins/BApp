@@ -23,10 +23,8 @@ export class QuestionnairePage {
       if (this.router.getCurrentNavigation().extras.state) {
         this.c_id = this.router.getCurrentNavigation().extras.state.c_id;
       }
-    });
-  }
+    })
 
-  ngOnInit(){
     this.n_id = this.route.snapshot.paramMap.get('id')
   }
 
@@ -43,7 +41,7 @@ export class QuestionnairePage {
   }
 
   saveInfo(form){
-    console.log('c_id: ' + this.c_id)
+    console.log('n_id: ' + this.n_id + ' & c_id: ' + this.c_id)
 
     const body = {
       "CampaignId": this.c_id,

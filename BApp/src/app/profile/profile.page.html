@@ -15,9 +15,9 @@
 <ion-content>
   
   <ion-avatar class="avatar">
-    <img src="/assets/profile_image.JPG" alt="">
+    <ion-img [src]=user_view.profile_url></ion-img>
     <ion-badge class="upload-badge">
-      <ion-icon class="upload-icon" name="images"></ion-icon> 
+      <ion-icon class="upload-icon" name="images" (click)=uploadImage()></ion-icon> 
     </ion-badge>
   </ion-avatar>
     
