@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
-import { HttpRequestService } from '../services/http-request.service'
-import { DataService } from '../services/data.service'
+import { HttpRequestService } from '../../services/http-request.service'
+import { DataService } from '../../services/data.service'
 import { Storage } from '@ionic/storage'
 import { Platform } from '@ionic/angular';
 
@@ -33,25 +33,11 @@ export class InvitationPage {
   private c_id
   private n_id
 
-  private subBackEvent  
-  
   async ngOnInit(){
     await this.getStoredInfo()
       .then(user => this.v_id = user.id)
-
-    this.initBackButtonHandler()
   }
 
-  ionViewWillLeave(){
-    this.subBackEvent && this.subBackEvent();
-  }
-
-  initBackButtonHandler(){
-    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
-      this.goBack()
-    })
-  }
-  
   getStoredInfo(){
     return this.storage.get('user')
   }

@@ -1,9 +1,9 @@
 import { Component, ɵConsole } from '@angular/core';
 import { Router } from '@angular/router';
 import { Platform, ModalController, LoadingController, ToastController, AlertController } from '@ionic/angular';
-import { EditModal } from '../modals/edit-modal.page';
-import { HttpRequestService } from '../services/http-request.service'
-import { DataService } from '../services/data.service'
+import { EditModal } from '../../modals/edit-modal.page';
+import { HttpRequestService } from '../../services/http-request.service'
+import { DataService } from '../../services/data.service'
 import { Storage } from '@ionic/storage'
 import { finalize } from 'rxjs/operators';
 
@@ -38,7 +38,6 @@ export class ProfilePage {
   private new_image_flag = false
 
   private loading
-  private subBackEvent
 
   async ngOnInit(){
     await this.getStoredInfo()
@@ -53,49 +52,10 @@ export class ProfilePage {
     await this.getUser()
     this.getParticipations()
     this.getHistory()
-
-    this.initBackButtonHandler()
   }
 
   ionViewWillEnter(){
     this.checkNotifications()
-  }
-
-  ionViewWillLeave(){
-    console.log('leaving')
-    this.subBackEvent && this.subBackEvent();
-  }
-
-  initBackButtonHandler() {
-    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
-      this.showBackAlert()
-    })
-  }
-
-  async showBackAlert(){
-
-    const alert = await this.alertController.create({
-      header: 'Logout',
-      message: 'Tem a certeza que quer sair?',
-      buttons: [
-        {
-          text: 'Não',
-          role: 'cancel',
-          handler: () => {
-            //
-          }
-        },
-        {
-          text: 'Sim',
-          handler: () => {
-            navigator['app'].exitApp()
-          }
-        }
-      ],
-      mode: 'ios'
-    });
-
-    await alert.present();
   }
 
   getStoredInfo(){

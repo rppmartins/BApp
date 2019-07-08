@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpRequestService } from '../services/http-request.service'
+import { HttpRequestService } from '../../services/http-request.service'
 
 @Component({
   selector: 'app-trophies',

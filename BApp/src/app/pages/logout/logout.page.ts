@@ -79,7 +79,8 @@ export class LogoutPage {
         error => console.log(error)
         )
       }
-    })*/
+    })
+    */
     this.navigateToLoginPage()
   }
   

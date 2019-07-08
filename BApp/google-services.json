@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "518579261265",
+    "firebase_url": "https://bancoalimentar-1991.firebaseio.com",
+    "project_id": "bancoalimentar-1991",
+    "storage_bucket": "bancoalimentar-1991.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518579261265:android:f1f4be12564b1626",
+        "android_client_info": {
+          "package_name": "com.ionic.bapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518579261265-n98odoogu3enj8lmslupv5hiol21k7gb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ionic.bapp",
+            "certificate_hash": "3afde303eadb6bc680c20af96bab4f1557fb6d05"
+          }
+        },
+        {
+          "client_id": "518579261265-ggj6b72t0penj2n2k1frrs9pvd1faojt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgDLwV99LTqCmYLaQ3i1IcIY8nN1OYY70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518579261265-ggj6b72t0penj2n2k1frrs9pvd1faojt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "518579261265-1tuco9k8rr4o6ahbh93i2p2kkamn59md.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ionic.bapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

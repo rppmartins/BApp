@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { AlertController, Platform } from '@ionic/angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { LocalNotifications, ELocalNotificationTriggerUnit } from '@ionic-native/local-notifications/ngx';
-import { HttpRequestService } from '../services/http-request.service';
+import { HttpRequestService } from '../../services/http-request.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-profile',
@@ -16,30 +17,22 @@ export class ScanPage {
   constructor(
     private router : Router,
     private platform : Platform,
+    private storage : Storage,
     private qrScanner: BarcodeScanner, 
     private alertController: AlertController,
     private localNotifications: LocalNotifications,
     private request : HttpRequestService
   ){}
 
-  private subBackEvent
+  private v_id
 
-  ngOnInit(){
-    this.initBackButtonHandler()
+  async ngOnInit(){
+    await this.storage.get('user')
+      .then(user => this.v_id = user.id)
   }
 
-  ionViewWillEnter(){ 
+  ionViewWillEnter(){
     this.scanCode(); 
-  }
-
-  ionViewWillLeave(){
-    this.subBackEvent && this.subBackEvent();
-  }
-
-  initBackButtonHandler(){
-    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
-      this.router.navigate(['/tabs/profile'])
-    })
   }
 
   betaScan(){
@@ -136,10 +129,8 @@ export class ScanPage {
   }
 
   checkIn(campaign_id){
-    //get from native storage
-    const volunteer_id = 1
 
-    return this.request.fetchPromise(`post`, `volunteer/${volunteer_id}/campaign/${campaign_id}`, '')
+    return this.request.fetchPromise(`post`, `volunteer/${this.v_id}/campaign/${campaign_id}`, '')
       .then(res => console.log(res))
       .catch(_ => console.log('something went wrong cheking in...'))
   }

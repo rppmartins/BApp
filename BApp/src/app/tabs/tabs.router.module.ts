@@ -12,7 +12,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../logout/logout.module#LogoutPageModule'
+            loadChildren: '../pages/logout/logout.module#LogoutPageModule'
           }
         ]
       },
@@ -21,7 +21,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../trophies/trophies.module#TrophiesPageModule'
+            loadChildren: '../pages/trophies/trophies.module#TrophiesPageModule'
           }
         ]
       },
@@ -30,7 +30,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../profile/profile.module#ProfilePageModule'
+            loadChildren: '../pages/profile/profile.module#ProfilePageModule'
           }
         ]
       },
@@ -39,16 +39,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: '../scan/scan.module#ScanPageModule'
-          }
-        ]
-      },
-      {
-        path: 'settings',
-        children: [
-          {
-            path: '',
-            loadChildren: '../settings/settings.module#SettingsPageModule'
+            loadChildren: '../pages/scan/scan.module#ScanPageModule'
           }
         ]
       },

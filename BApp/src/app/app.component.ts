@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -14,6 +14,7 @@ import { Storage } from '@ionic/storage'
 export class AppComponent {
   constructor(
     private platform: Platform,
+    private alertController : AlertController,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private router: Router,
@@ -40,11 +41,24 @@ export class AppComponent {
         this.splashScreen.hide();
       })
 
-      /*
-      this.platform.backButton.subscribeWithPriority(999990,  () => {
-        alert("back pressed");
+      
+      this.platform.backButton.subscribeWithPriority(999990,  async () => {
+
+        const n_types = ['questionnaires', 'invitations', 'thanks']
+        const n_tabs = ['trophies', 'scan', 'notifications']
+
+        if(n_types.some(type => this.platform.url().includes(type))){
+          this.navigateToNotificationsPage()
+        }
+        else if(n_tabs.some(tab => this.platform.url().includes(tab))){
+          this.navigateToProfilePage()
+        }
+        else if(this.platform.url().includes('form')){
+          this.navigateToLoginPage()
+        }
+        else this.showBackAlert()
       });
-      */
+      
   }
   
   checkLogin(){
@@ -53,6 +67,32 @@ export class AppComponent {
       .catch(err => console.log('something went wrong getting v_id...'))
   }
 
+  async showBackAlert(){
+    const alert = await this.alertController.create({
+      header: 'Sair',
+      message: 'Tem a certeza que quer sair?',
+      buttons: [
+        {
+          text: 'Não',
+          role: 'cancel',
+          handler: () => {
+            //
+          }
+        },
+        {
+          text: 'Sim',
+          handler: () => {
+            navigator['app'].exitApp()
+          }
+        }
+      ],
+      //mode: 'ios'
+    });
+  
+    await alert.present();
+  }
+
   navigateToLoginPage() { this.router.navigate(['/login']) }
   navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
+  navigateToNotificationsPage() { this.router.navigate(['/notifications']) }
 }

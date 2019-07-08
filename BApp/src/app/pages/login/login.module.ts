@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoginPage } from './login.page';
 
-//import { TabsPage } from '../tabs/tabs.page';
-
 @NgModule({
   imports: [
     IonicModule,

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpRequestService } from '../services/http-request.service'
-import { DataService } from '../services/data.service'
+import { HttpRequestService } from '../../services/http-request.service'
+import { DataService } from '../../services/data.service'
 import { Storage } from '@ionic/storage'
 import { Platform } from '@ionic/angular';
 
@@ -22,30 +22,16 @@ export class NotificationsPage implements OnInit{
 
   private v_id
   private notifications
-
-  private subBackEvent
   
   async ngOnInit(){
     await this.getStoredInfo()
     .then(user => this.v_id = user.id)
     
     this.getNotifications()
-
-    this.initBackButtonHandler()
   }
 
   ionViewWillEnter(){
     this.checkSubmission()
-  }
-
-  ionViewWillLeave(){
-    this.subBackEvent && this.subBackEvent();
-  }
-
-  initBackButtonHandler(){
-    this.subBackEvent = this.platform.backButton.subscribeWithPriority(999999,  () => {
-      this.goBack()
-    })
   }
 
   getStoredInfo(){

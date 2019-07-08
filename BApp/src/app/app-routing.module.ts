@@ -3,13 +3,13 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full'},
-  { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
-  { path: 'form', loadChildren: './form/form.module#FormPageModule' },
+  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
+  { path: 'form', loadChildren: './pages/form/form.module#FormPageModule' },
   { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule' },
-  { path: 'notifications', loadChildren: './notifications/notifications.module#NotificationsPageModule' },
-  { path: 'questionnaires/:id', loadChildren: './questionnaires/questionnaires.module#QuestionnairePageModule' },
-  { path: 'invitations/:id', loadChildren: './invitations/invitations.module#InvitationPageModule' },
-  { path: 'thanks/:id', loadChildren: './thanks/thanks.module#ThanksPageModule' }
+  { path: 'notifications', loadChildren: './pages/notifications/notifications.module#NotificationsPageModule' },
+  { path: 'questionnaires/:id', loadChildren: './pages/questionnaires/questionnaires.module#QuestionnairePageModule' },
+  { path: 'invitations/:id', loadChildren: './pages/invitations/invitations.module#InvitationPageModule' },
+  { path: 'thanks/:id', loadChildren: './pages/thanks/thanks.module#ThanksPageModule' }
 ];
 
 @NgModule({
