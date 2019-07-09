@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Platform, LoadingController, AlertController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { DataService } from '../../services/data.service'
+import { HttpRequestService } from '../../services/http-request.service'
 import { isNumber } from 'util';
 
 import * as firebase from 'firebase/app'
@@ -21,6 +22,7 @@ export class LoginPage {
     private platform : Platform,
     private loadingController : LoadingController,
     private alertController : AlertController,
+    private http : HttpRequestService,
     private storage : Storage,
     private data : DataService,
 
@@ -29,43 +31,88 @@ export class LoginPage {
   )
   {}
 
-  private subBackEvent
+  async loginWithGoogle(){
 
-  FB_APP_ID = 2275465636046649;
-  users = [
-    {
-      id : 1,
-      email: "rppmartins1996@hotmail.com",
-    }
-  ]
-
-  loginWithGoogle(){
-    if(this.platform.is('cordova')) this.nativeGoogleLogin()
-    else this.webGoogleLogin()
-  }
-
-  async nativeGoogleLogin(){
-
-    const user = await this.google.login({
+    const loggedUser = await this.google.login({
       'webClientId' : '518579261265-ggj6b72t0penj2n2k1frrs9pvd1faojt.apps.googleusercontent.com',
       'offline' : true,
       'scopes' : 'profile email'
     })
     .catch(err => console.log('somethign went wrong getting google plus user...'))
 
-    return await this.afAuth.auth.signInWithCredential(
-      firebase.auth.GoogleAuthProvider.credential(user.idToken)
-    )
-      .catch(err => console.log('somethign went wrong authenticating google plus user...'))
+    await this.afAuth.auth.signInWithCredential(
+      firebase.auth.GoogleAuthProvider.credential(loggedUser.idToken)
+    ) 
+    .catch(err => console.log('somethign went wrong authenticating google plus user...'))
+
+    const user = {
+      name : loggedUser.displayName,
+      email : loggedUser.email,
+      profile_url : loggedUser.imageUrl,
+      service : 'google'
+    }
+
+    this.executeLogin(user)
   }
 
-  async webGoogleLogin(){
-    
-    const provider = new firebase.auth.GoogleAuthProvider()
-    const credentials = await this.afAuth.auth.signInWithPopup(provider)
-      .catch(err => console.log('something went wrong with web login...'))
+  async executeLogin(user){
+    let route = 'form'
+
+    const volunteer = await this.checkVolunteerExistence(user)
+    const id = volunteer != undefined ? volunteer['id'] : null
+
+    if(id != null && isNumber(id) && id >= 0){
+
+      user['id'] = id
+      this.storage.set('user', user)
+      
+      route = 'profile'
+    }
+    else {
+      this.data.setData('user', user)
+    }
+
+    this.navigate(route)
+  }
+
+  checkVolunteerExistence(user){
+    return this.http.fetchPromise('get', `volunteers/${user.email}?filter=Email`, '')
+  }
+
+  navigate(route){
+    const routes = {
+      'form' : '/form',
+      'profile' : '/tabs/profile'
+    }
+    return this.router.navigate([routes[route]])
   }
   
+  fakeLogin(){
+    let user = {
+      email : 'rppmartins1996@hotmail.com',
+    }
+    let route = 'form'
+
+    const volunteer = this.checkExistence(user)
+    const id = volunteer != undefined ? volunteer['id'] : null
+
+    if(id != null && isNumber(id) && id >= 0){
+      user['id'] = id
+      this.storage.set('user', user)
+      
+      route = 'profile'
+    }
+    else {
+      console.log(user)
+      this.data.setData('user', user)
+    }
+
+    this.navigate(route)
+  }
+  checkExistence(user_info){
+    return {id : 1}
+  }
+
   /*
   async loginWithGoogle(){
     const loading = await this.loadingController.create({
@@ -145,59 +192,4 @@ export class LoginPage {
     })
   }
   */
-
-  async presentLoading(loading) {
-		return await loading.present();
-  }
-
-  fakeloginWithFacebook(){
-    const user = {
-      email : 'rppmartins1996@hotmail.com',
-      //token : 'trcyub5467yhb'
-    }
-    this.fakeLogin(user)
-  }
-  fakeloginWithGoogle(){
-    const user = {
-      email : 'rppmartins1996@gmail.com',
-      //token : 'trcyub5467yhb'
-    }
-    this.fakeLogin(user)
-  }
-
-  fakeLogin(form){
-    let user = form
-    let route = 'form'
-
-    const volunteer = this.checkVolunteerExistence(user)
-    const id = volunteer != undefined ? volunteer.id : null
-
-    if(id != null && isNumber(id) && id >= 0){
-      user['id'] = id
-      this.storage.set('user', user)
-      
-      route = 'profile'
-    }
-    else {
-      console.log(user)
-      this.data.setData('user', user)
-    }
-
-    this.navigate(route)
-  }
-
-  checkVolunteerExistence(user_info){
-    return this.users.find(user => {
-      return user.email == user_info.email
-    })
-  }
-
-  navigate(route){
-    const routes = {
-      'form' : '/form',
-      'profile' : '/tabs/profile'
-    }
-    
-    return this.router.navigate([routes[route]])
-  }
 }

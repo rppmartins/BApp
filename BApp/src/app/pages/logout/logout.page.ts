@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { AlertController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage'
 
-//import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { AngularFireAuth } from 'angularfire2/auth'
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 //import { Facebook } from '@ionic-native/facebook/ngx';
-//import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
 @Component({
   selector: 'app-logout',
@@ -18,9 +18,9 @@ export class LogoutPage {
     private alertController: AlertController,
     private storage : Storage,
 
-    //private google : GooglePlus,
-    //private facebook : Facebook,
-    //private nativeStorage : NativeStorage
+    private afAuth : AngularFireAuth,
+    private google : GooglePlus,
+    //private facebook : Facebook
   )
   {}
 
@@ -48,15 +48,31 @@ export class LogoutPage {
           }
         }
       ],
-      mode: 'ios'
+      //mode: 'ios'
     });
 
     await alert.present();
   }
 
-  executeLogout(){
-    this.storage.remove('user')
-    /*
+  async executeLogout(){
+    await this.storage.get('user')
+      .then(user => {
+        if(user.service == 'google'){
+          this.afAuth.auth.signOut()
+          this.google.logout()
+        }
+      })
+      
+      this.storage.remove('user')
+      this.navigateToLoginPage()
+  }
+  
+  navigateToLoginPage() { this.router.navigate(['/login']) }
+  navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
+
+}
+
+/*
     this.nativeStorage.getItem('user').then( user => {
       
       if(user.service == 'google'){
@@ -81,10 +97,3 @@ export class LogoutPage {
       }
     })
     */
-    this.navigateToLoginPage()
-  }
-  
-  navigateToLoginPage() { this.router.navigate(['/login']) }
-  navigateToProfilePage() { this.router.navigate(['/tabs']) }
-
-}

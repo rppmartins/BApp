@@ -30,14 +30,14 @@ export class AppComponent {
         if(await this.checkLogin()){
           this.splashScreen.hide();
           this.navigateToProfilePage()
-          
         }
         else{ 
           this.splashScreen.hide();
           this.navigateToLoginPage()
         }
 
-        this.statusBar.styleDefault();
+        //this.statusBar.styleDefault();
+        this.statusBar.hide()
         this.splashScreen.hide();
       })
 
@@ -93,6 +93,6 @@ export class AppComponent {
   }
 
   navigateToLoginPage() { this.router.navigate(['/login']) }
-  navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
+  navigateToProfilePage() { this.router.navigate(['/tabs']) }
   navigateToNotificationsPage() { this.router.navigate(['/notifications']) }
 }

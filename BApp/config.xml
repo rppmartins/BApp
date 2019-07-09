@@ -3,6 +3,7 @@
     <name>BApp</name>
     <description>Banco Alimentar's Mobile App</description>
     <author href="https://www.bancoalimentar.pt/">Banco Alimentar</author>
+    <author href="https://www.linkedin.com/in/rppmartins/">rppmartins</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

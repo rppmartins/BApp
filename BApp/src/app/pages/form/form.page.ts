@@ -50,14 +50,13 @@ export class FormPage {
     )
 
     this.http.fetchPromise('post','volunteers', body)
-      .then(res => {
-        console.log(res)
+      .then(_ => {  
         this.storage.set('user', this.login_info)
         this.router.navigate(['/tabs/profile'])
       })
       .catch(err => {
         console.log(`something went wrong with form! : ${err}`)
-        this.router.navigate(['login'])
+        this.router.navigate(['/login'])
       })
   }
 

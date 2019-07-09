@@ -39,19 +39,29 @@ export class ProfilePage {
 
   private loading
 
+  private loaded = false
+
   async ngOnInit(){
+    
     await this.getStoredInfo()
       .then(user => this.stored_info = user)
-      .then(user => console.log(user))
+      .then(async _ => await this.getUser())
+      .then(_ => {
+        this.getParticipations()
+        this.getHistory()
+      })
+      .then(_ => this.loaded = true)
 
+    /*
+    await this.getStoredInfo()
+      .then(user => this.stored_info = user)
     this.user_view = {}
     this.participations = {}
-
     this.notifications_flag = false
-
     await this.getUser()
     this.getParticipations()
     this.getHistory()
+    */
   }
 
   ionViewWillEnter(){
@@ -61,8 +71,9 @@ export class ProfilePage {
   getStoredInfo(){
     return this.storage.get('user')
       .then(res => {
-        if(res.profile_url == '' || res.profile_url == undefined)
+        if(res.profile_url == '' || res.profile_url == undefined){
           res['profile_url'] = "/assets/default_profile.jpg"
+        }
         return res
       })
   }
@@ -102,9 +113,13 @@ export class ProfilePage {
   setView(){
     const full_name = this.user['user_name'].split(' ')
     
-    let header_name = `${full_name[0]} `
-    if(full_name.length > 1) header_name +=  `${full_name[full_name.length-1]}`
-
+    let header_name = ''
+    if(this.stored_info.name != undefined) header_name = this.stored_info.name
+    else {
+      header_name = `${full_name[0]} `
+      if(full_name.length > 1) header_name +=  `${full_name[full_name.length-1]}`
+    }
+    
     const image = this.stored_info['profile_url'] == undefined ? 
       "/assets/default_profile.jpg" : this.stored_info['profile_url']
 
@@ -258,7 +273,7 @@ export class ProfilePage {
     this.http.fetchPromise(method, `picture`, body)
       .then(res => {
         finalize(this.loading.dismiss())
-        this.showToast(true)
+        //this.showToast(true)
       })
       .catch(e => this.showToast(false))
   }

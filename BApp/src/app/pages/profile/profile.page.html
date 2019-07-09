@@ -12,7 +12,7 @@
   </ion-toolbar>
 </ion-header> 
 
-<ion-content>
+<ion-content *ngIf="loaded">
   
   <ion-avatar class="avatar">
     <ion-img [src]=user_view.profile_url></ion-img>
