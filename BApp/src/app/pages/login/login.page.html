@@ -1,5 +1,5 @@
 <ion-content>
-    <div class="vertical-aligned" ion-fixed>
+    <div class="vertical-aligned" style="padding-top: 15%" ion-fixed>
         <ion-card style="box-shadow: 0 0 0 0; padding:10px">
             <ion-card-header>
                 <ion-img
@@ -13,27 +13,17 @@
             
             <ion-card-content>   
                 
-                <ion-button
-                mode="ios" 
-                class="facebook_button"
-                fill="outline"
-                expand="block"
-                (click)="fakeloginWithFacebook()"
-                >
-                    Entrar com  <ion-icon name="logo-facebook"></ion-icon>acebook
-                </ion-button>
-
-                <p text-center > <b>OU</b> </p>
-
                 <ion-button 
                 mode="ios"
                 class="google_button" 
                 fill="outline" 
                 expand="block"
-                (click)="loginWithGoogle()"
+                (click)="loginWithGoogle()" 
                 >
                     Entrar com  <ion-icon name="logo-google"></ion-icon>oogle
                 </ion-button>
+
+                <!--<p text-center > <b>OU</b> </p>-->
 
             </ion-card-content>
         </ion-card>

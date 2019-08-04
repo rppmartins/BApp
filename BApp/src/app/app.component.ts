@@ -36,7 +36,6 @@ export class AppComponent {
           this.navigateToLoginPage()
         }
 
-        //this.statusBar.styleDefault();
         this.statusBar.hide()
         this.splashScreen.hide();
       })
@@ -93,6 +92,6 @@ export class AppComponent {
   }
 
   navigateToLoginPage() { this.router.navigate(['/login']) }
-  navigateToProfilePage() { this.router.navigate(['/tabs']) }
+  navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
   navigateToNotificationsPage() { this.router.navigate(['/notifications']) }
 }

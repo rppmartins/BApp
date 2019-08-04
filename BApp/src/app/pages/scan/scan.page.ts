@@ -21,7 +21,7 @@ export class ScanPage {
     private qrScanner: BarcodeScanner, 
     private alertController: AlertController,
     private localNotifications: LocalNotifications,
-    private request : HttpRequestService
+    private http : HttpRequestService
   ){}
 
   private v_id
@@ -112,7 +112,7 @@ export class ScanPage {
           }
         }
       ],
-      mode: 'ios'
+      //mode: 'ios'
     })
 
     await alert.present();
@@ -130,7 +130,7 @@ export class ScanPage {
 
   checkIn(campaign_id){
 
-    return this.request.fetchPromise(`post`, `volunteer/${this.v_id}/campaign/${campaign_id}`, '')
+    return this.http.checkIn(this.v_id, campaign_id)
       .then(res => console.log(res))
       .catch(_ => console.log('something went wrong cheking in...'))
   }

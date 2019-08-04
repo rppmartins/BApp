@@ -38,12 +38,12 @@ export class LoginPage {
       'offline' : true,
       'scopes' : 'profile email'
     })
-    .catch(err => console.log('somethign went wrong getting google plus user...'))
+    .catch(err => console.log('something went wrong getting google plus user...'))
 
     await this.afAuth.auth.signInWithCredential(
       firebase.auth.GoogleAuthProvider.credential(loggedUser.idToken)
     ) 
-    .catch(err => console.log('somethign went wrong authenticating google plus user...'))
+    .catch(err => console.log('something went wrong authenticating google plus user...'))
 
     const user = {
       name : loggedUser.displayName,
@@ -58,7 +58,7 @@ export class LoginPage {
   async executeLogin(user){
     let route = 'form'
 
-    const volunteer = await this.checkVolunteerExistence(user)
+    const volunteer = await this.tryGetVolunteer(user)
     const id = volunteer != undefined ? volunteer['id'] : null
 
     if(id != null && isNumber(id) && id >= 0){
@@ -75,8 +75,9 @@ export class LoginPage {
     this.navigate(route)
   }
 
-  checkVolunteerExistence(user){
-    return this.http.fetchPromise('get', `volunteers/${user.email}?filter=Email`, '')
+  tryGetVolunteer(user){
+    return this.http.getVolunteer(user.email)
+    //return this.http.fetchPromise('get', `volunteers/${user.email}?filter=Email`, '')
   }
 
   navigate(route){
@@ -87,13 +88,17 @@ export class LoginPage {
     return this.router.navigate([routes[route]])
   }
   
-  fakeLogin(){
+  async fakeLogin(){
+    debugger
     let user = {
-      email : 'rppmartins1996@hotmail.com',
+      name : 'Rodrigo Martins',
+      email : 'rppmartins1996@hotmail.com', 
+      profile_url : '',
+      service : 'none'
     }
     let route = 'form'
 
-    const volunteer = this.checkExistence(user)
+    const volunteer = await this.tryGetVolunteer(user)
     const id = volunteer != undefined ? volunteer['id'] : null
 
     if(id != null && isNumber(id) && id >= 0){
@@ -109,87 +114,5 @@ export class LoginPage {
 
     this.navigate(route)
   }
-  checkExistence(user_info){
-    return {id : 1}
-  }
-
-  /*
-  async loginWithGoogle(){
-    const loading = await this.loadingController.create({
-      message: 'Where connecting you to Google...'
-    });
-    this.presentLoading(loading)
-
-    this.google.login({
-      'scopes': '',
-      'webClientId': '534192712541-85pcfqgla352ebtdjfu2s3de0al85aep.apps.googleusercontent.com',
-      'offline': true
-    })
-    .then(user => {
-      loading.dismiss();
-
-      this.nativeStorage.setItem('user', {
-        name: user.displayName,
-        email: user.email,
-        picture: user.imageUrl,
-        service: 'google'
-      })
-      .then(() =>{
-        const user_info = {email: user.email, token : user.accessToken}
-
-        if(this.checkVolunteerExistence(user_info)) this.navigateToProfilePage()
-        else this.navigateToFormPage()
-      }, 
-      error =>{
-        console.log(error);
-      })
-
-      loading.dismiss();
-    }, 
-    err =>{
-      console.log(err)
-      loading.dismiss();
-    });
-  }
   
-  async loginWithFacebook(){
-    const loading = await this.loadingController.create({
-			message: 'Where connecting you to Facebook...'
-		});
-    
-    this.presentLoading(loading);
-    //let permissions = new Array<string>();    
-
-    const permissions = ["public_profile", "email"];
-    
-    this.facebook.login(permissions)
-    .then(response => {
-      let user_id = response.authResponse.userID
-
-      this.facebook.api("/me?fields=name,email", permissions)
-      .then(user => {
-        user.picture = "https://graph.facebook.com/" + user_id + "/picture?type=large"
-
-        this.nativeStorage.setItem('user',{
-          name: user.name,
-          email: user.email,
-          picture: user.picture,
-          service: 'facebook'
-        })
-        .then(() => {
-          this.navigateToProfilePage()
-          loading.dismiss();
-        },
-        error => {
-          console.log(error)
-          loading.dismiss()
-        })
-      })
-    },
-    error => {
-      console.log(error);
-			loading.dismiss();
-    })
-  }
-  */
 }
