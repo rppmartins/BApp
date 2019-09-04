@@ -11,7 +11,6 @@ const routes: Routes = [
   { path: 'questionnaires/:id', loadChildren: './pages/questionnaires/questionnaires.module#QuestionnairePageModule' },
   { path: 'invitations/:id', loadChildren: './pages/invitations/invitations.module#InvitationPageModule' },
   { path: 'thanks/:id', loadChildren: './pages/thanks/thanks.module#ThanksPageModule' },
-  { path: 'edit/:id', loadChildren: './pages/edit/edit.module#EditPageModule' }
 ];
 
 @NgModule({

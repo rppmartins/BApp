@@ -26,8 +26,6 @@ export class FormPage {
   private cities
 
   ngOnInit(){
-    
-    console.log('ngOnInit')
     this.login_info = this.data.getData('user')
 
     this.getCities()
@@ -48,17 +46,14 @@ export class FormPage {
     })
   }
 
-  register(form){
+  async register(form){
     
     const form_values = this.getValues(form.form.value)
 
     const body = new Volunteer(form_values, this.login_info['email']).toDao()
 
-    debugger
-
-    this.http.createVolunteer(body)
+    await this.http.createVolunteer(body)
       .then(user_id => {
-        debugger
 
         this.login_info['id'] = user_id['ID']
         this.storage.set('user', this.login_info)

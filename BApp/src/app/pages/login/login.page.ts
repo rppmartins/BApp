@@ -57,11 +57,11 @@ export class LoginPage {
 
   async executeLogin(user){
     let route = 'form'
+
+    debugger
     
     const volunteer = await this.tryGetVolunteer(user.email)
     const user_id = volunteer != undefined ? volunteer['Id'] : null
-
-    console.log(`volunteer is : ${volunteer}`)
 
     if(user_id != null && isNumber(user_id) && user_id >= 0){
       user['id'] = user_id
@@ -94,31 +94,12 @@ export class LoginPage {
     debugger
     
     let user = {
-      name : 'Leandro Duarte',
-      email : 'lando@gmail.com', 
+      name : 'Rodrigo Martins',
+      email : 'rppmartins1996@gmail.com', 
       profile_url : '',
       service : 'none'
     }
-    let route = 'form'
-    
-    const volunteer = await this.tryGetVolunteer(user.email)
-    const user_id = volunteer != undefined ? volunteer['Id'] : null
 
-    debugger
-
-    console.log(`volunteer is : ${volunteer}`)
-
-    if(user_id != null && isNumber(user_id) && user_id >= 0){
-      user['id'] = user_id
-      this.storage.set('user', user)
-      
-      route = 'profile'
-    }
-    else {
-      console.log(user)
-      this.data.setData('user', user)
-    }
-
-    this.navigate(route)
+    this.executeLogin(user)
   }
 }

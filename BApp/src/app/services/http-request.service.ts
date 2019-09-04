@@ -85,9 +85,7 @@ export class HttpRequestService {
 
     return this.http[method](`${this.basic_url}${uri}`, body).toPromise()
       .then(res => {
-        console.log(`response -> ${JSON.stringify(res)}`)
-
-        this.fetch_tries = 3
+        this.fetch_tries = 2
         return res
       })
       .catch(err => {
@@ -100,7 +98,7 @@ export class HttpRequestService {
         }
         else {
           console.log('something went wrong resolving fetch...')
-          this.fetch_tries = 3
+          this.fetch_tries = 2
           return null
         }
       })

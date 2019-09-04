@@ -13,9 +13,7 @@ export class EditPage {
     private modalController : ModalController,
     private navParams: NavParams,
     private http : HttpRequestService
-  ){
-    //this.v_id = this.route.snapshot.paramMap.get('id')
-  }
+  ){}
 
   user_info = null
   cities
@@ -27,32 +25,15 @@ export class EditPage {
 
   private loaded
 
-  ngOnInit(){
-    /*
-    const header_name = this.navParams.get('header_name');
-    this.user_info = this.navParams.get('user_info');
-
-    console.log(JSON.stringify(header_name))
-    console.log(JSON.stringify(this.user_info))
-    */
-
-  }
-  
   ionViewWillEnter(){
     const header_name = this.navParams.get('header_name');
     this.user_info = this.navParams.get('user_info');
-
-    console.log(JSON.stringify(header_name))
-    console.log(JSON.stringify(this.user_info))
 
     this.formatUserInfo("Rodrigo Martins")
     this.getCities()
   }
 
   formatUserInfo(header_name){
-
-    debugger
-
     this.user_info['header_name'] = header_name
 
     const zipcode = this.user_info['zipcode'].split(' ')
@@ -65,8 +46,6 @@ export class EditPage {
     this.user_info['birth_date'] = this.user_info['birth_date'].split('T')[0]
 
     this.loaded = true
-
-    debugger
   }
 
   getCities(){

@@ -102,8 +102,6 @@ export class NotificationsPage implements OnInit{
     let last_id = Math.max.apply(Math, this.notifications.map(
       notification => { return notification.id; }
     ))
-    
-    debugger
 
     if(last_id < 0) last_id = 0
 
