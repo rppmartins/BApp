@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpRequestService } from '../../services/http-request.service'
 import { DataService } from '../../services/data.service'
-import { Platform } from '@ionic/angular';
+
+import { Questionnaire } from '../../models/questionnaire.model'
 
 @Component({
   selector: 'app-questionnaire',
@@ -12,7 +13,6 @@ import { Platform } from '@ionic/angular';
 export class QuestionnairePage {
   constructor(
     public router: Router,
-    private platform : Platform,
     private route : ActivatedRoute,
     private http : HttpRequestService,
     private data : DataService
@@ -30,9 +30,7 @@ export class QuestionnairePage {
   private n_id
 
   goBack(submit?){ 
-    if(submit){
-      this.data.setData('n_id', this.n_id)
-    }
+    if(submit){ this.data.setData('n_id', this.n_id) }
     this.router.navigate(["/notifications"])
   }
 
@@ -41,21 +39,14 @@ export class QuestionnairePage {
     this.goBack(true)
   }
 
-  saveInfo(form){
+  async saveInfo(form){
+    debugger
+
     console.log('n_id: ' + this.n_id + ' & c_id: ' + this.c_id)
 
-    const body = {
-      "CampaignId": this.c_id,
-      "First_Participation": form['first_time'],
-      "Local": form['spot'] != undefined ? form['spot'] : null,
-      "Period": form['time'] != undefined ? form['time'] : null,
-      "DayTimeParticipation": form['day_time'],
-      "Evaluation_Campaign": form['organization'],
-      "Evaluation_WareHouse": form['behavior'],
-      "Self_Evaluation": form['help'],
-    }
+    const body = new Questionnaire(this.c_id, form).toDao()
 
-    this.http.fetchPromise('post', `questionnaires`, body)
+    await this.http.answerQuestionnaire(body)
       .catch(err => console.log('something went wrong submitting questionnaire...'))
   }
 }

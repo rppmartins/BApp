@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Participations } from '../models/participations.model';
 
 @Injectable({
   providedIn: 'root'
-})
+})  
 export class HttpRequestService {
 
   constructor(private http : HttpClient) { }
@@ -17,8 +18,9 @@ export class HttpRequestService {
   createVolunteer(body){
     return this.fetchPromise('post', `volunteers`, body)
   }
-  getVolunteer(v_email){
-    return this.fetchPromise('get', `volunteers/${v_email}?filter=Email`, '')
+  getVolunteer(identifier, filter){
+    return this.fetchPromise('get', `volunteers/${identifier}?filter=${filter}`, '')
+      .then(volunteers => { if(volunteers != undefined) return volunteers[0] })
   }
   updateVolunteer(v_id, body){
     return this.fetchPromise('put', `volunteers/${v_id}`, body)
@@ -36,6 +38,7 @@ export class HttpRequestService {
   //-------------------------------------------------------------------------Participations
   getParticipations(v_id){
     return this.fetchPromise('get', `volunteers/${v_id}/participations`, '')
+      .then(participations => { if(participations != undefined) return participations[0] })
   }
   //-------------------------------------------------------------------------History
   getHistory(v_id){
@@ -46,7 +49,7 @@ export class HttpRequestService {
     return this.fetchPromise('get', `volunteers/${v_id}/notifications`, '')
   }
   getLastNotifcations(v_id, last_id){
-    return this.fetchPromise('get', `volunteers/${v_id}/notifications?last_id=${last_id}`, '')
+    return this.fetchPromise('get', `volunteers/${v_id}/notifications/${last_id}`, '')
   }
   updateNotification(n_id, body){
     return this.fetchPromise('put', `notification/${n_id}`, body)
@@ -56,7 +59,7 @@ export class HttpRequestService {
   }
   //-------------------------------------------------------------------------Invitations
   answerInvitation(body){
-    return this.fetchPromise('post', `invitations`, body)
+    return this.fetchPromise('post', `answer`, body)
   }
   //-------------------------------------------------------------------------Questionnaires
   answerQuestionnaire(body){
@@ -76,21 +79,30 @@ export class HttpRequestService {
     return this.http.get(cities_url).toPromise()
   }
 
-  
+
   private fetchPromise(method, uri, body){
     console.log(uri)
 
     return this.http[method](`${this.basic_url}${uri}`, body).toPromise()
       .then(res => {
+        console.log(`response -> ${JSON.stringify(res)}`)
+
         this.fetch_tries = 3
         return res
       })
       .catch(err => {
+        console.log(`error -> ${JSON.stringify(err.error.error)}`)
+
+        console.log(`tries = ${this.fetch_tries}`)
         if(this.fetch_tries > 0) {
           this.fetch_tries -= 1
           this.fetchPromise(method, uri, body)
         }
-        else console.log('something went wrong resolving fetch...')
+        else {
+          console.log('something went wrong resolving fetch...')
+          this.fetch_tries = 3
+          return null
+        }
       })
   }
 }

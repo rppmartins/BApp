@@ -4,11 +4,12 @@ import { HttpRequestService } from '../../services/http-request.service'
 import { DataService } from '../../services/data.service'
 import { Storage } from '@ionic/storage'
 import { Platform } from '@ionic/angular';
+import { Invitation } from 'src/app/models/invitation.model';
 
 @Component({
   selector: 'app-invitation',
   templateUrl: 'invitations.page.html',
-  styleUrls: ['invitations.page.scss']
+  styleUrls: ['invitations.page.scss']    
 })
 export class InvitationPage {
 
@@ -54,17 +55,14 @@ export class InvitationPage {
     this.goBack(true)
   }
 
-  saveInfo(form){
+  async saveInfo(form){
+    debugger
+
     console.log('v_id: ' + this.v_id + ', n_id: ' + this.n_id + ' & c_id: ' + this.c_id)
 
-    const body = {
-      'CampaignId' : this.c_id,
-      'VolunteerId' : this.v_id,
-      'Participation' : form['participation'],
-      'DayTime' : form['day_time'] != undefined ? form['day_time'] : null
-    }
+    const body = new Invitation(this.c_id, this.v_id, form).toDao()
 
-    this.http.fetchPromise('post', `invitations`, body)
-      .catch(err => console.log('something went wrong submitting questionnaire...'))
+    await this.http.answerInvitation(body)
+      .catch(err => console.log('something went wrong submitting answare...'))
   }
 }

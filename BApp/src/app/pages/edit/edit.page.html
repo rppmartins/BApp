@@ -1,6 +1,7 @@
 <ion-header no-border class="header">
-    <ion-toolbar mode="md" style="padding-right: 10px">
-        <ion-title style="margin-top: 5px; float: left;">{{header_name}}</ion-title>
+    <ion-toolbar mode="md" style="padding-right: 10px; padding-left: 10px">
+        <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
+        <ion-title style="margin-top: 5px; float: left;">{{user_info.header_name}}</ion-title>
         <ion-icon style="width: 30px; height: 30px; float: right; color: var(--ion-color-ba)" name="checkmark" (click)=save()></ion-icon>
         <ion-icon style="width: 30px; height: 30px; float: right; color: var(--ion-color-ba)" name="close" (click)=cancel()></ion-icon>
     </ion-toolbar>

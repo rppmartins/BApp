@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpRequestService } from '../../services/http-request.service'
+import { TrophiesEntry } from 'src/app/models/trophies-entry.model';
 
 @Component({
   selector: 'app-trophies',
@@ -18,21 +19,10 @@ export class TrophiesPage {
 
   getTopParticipants(){
     
-    this.http.fetchPromise('get', `trophies`, '')
-      .then(data => this.participants = this.formatData(data.message))
+    this.http.getTrophies()
+      .then(data => this.participants = data.map(entry => new TrophiesEntry(entry)))
       .then(_ => this.setAvatars())
       .catch(_ => console.log('something went wrong getting trophies...'))
-  }
-
-  formatData(data){
-    return data.map(value => {
-      return {
-        id : value['Id'],
-        name : value['Name'],
-        participations : value['Participations']
-      }
-    })
-    .sort((a,b) => b.participations - a.participations)
   }
 
   setAvatars(){
@@ -42,7 +32,7 @@ export class TrophiesPage {
   }
 
   getAvatar(id){
-    return this.http.fetchPromise('get', `pictures/${id}`, '')
+    return this.http.getPicture(id)
       .then(data => data.message)
       .catch(_ => console.log('something went wrong getting avatar...'))
   }

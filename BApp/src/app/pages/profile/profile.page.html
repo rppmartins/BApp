@@ -1,7 +1,7 @@
-<ion-header no-border class="header">
+<ion-header no-border class="header" *ngIf="loaded">
   <ion-toolbar mode="md" style="padding-left:10px;">
     <ion-img style="width: 25px; height: 25px; float: left;" src="/assets/icon/ba_icon.png"></ion-img>
-    <ion-title style="float: left;">{{user_view.header_name}}</ion-title>
+    <ion-title style="float: left" >{{user_view.header_name}}</ion-title>
     
     <div *ngIf="!notifications_flag; else iconFill">
       <ion-icon class="notification-icon" name="square-outline" mode="md" (click)=goToNotifications()></ion-icon>
@@ -22,13 +22,13 @@
   </ion-avatar>
     
   <ion-card-header>
-    <ion-card-subtitle style="color:var(--ion-color-ba)">{{user_view.name}}</ion-card-subtitle>
+    <ion-card-subtitle style="color:var(--ion-color-ba)">{{user_view.full_name}}</ion-card-subtitle>
   </ion-card-header>
 
   <div padding>
     <ion-list-header>
       <ion-label style="margin-left:-5%; color:var(--ion-color-ba)">Informação</ion-label>
-      <ion-icon class="lil-icons" style="margin-right: 0%" mode="md" name="create" (click)="presentEditModal()"></ion-icon>
+      <ion-icon class="lil-icons" style="margin-right: 0%" mode="md" name="create" (click)="editInfo()"></ion-icon>
     </ion-list-header>
         
     <div *ngFor="let info of user_view.info | keyvalue">

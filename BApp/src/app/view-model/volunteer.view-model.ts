@@ -30,11 +30,11 @@ export class VolunteerView{
             'Código Postal: ':`${user['zipcode']}`,
             'Email: ':`${user['email']}`,
             'Telemovel: ':`${user['cellphone']}`,
-            'Telefone: ':`${user['phone']}`
+            'Telefone: ': user['phone'] == "" ? "Sem Informação" : `${user['phone']}`
         }
     }
 
-    getAge(birth_date){
+    private getAge(birth_date){
         const birth_arr = birth_date.split("-")
         const birth_year = birth_arr[0]
         const birth_month = birth_arr[1]

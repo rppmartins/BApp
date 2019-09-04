@@ -30,15 +30,15 @@
                 <ion-radio-group name="participation" class="inline-group" ngModel required>
                     <ion-item lines="none" float="left" class="left-radio">
                         <ion-label>Sim</ion-label>
-                        <ion-radio mode="md" slot="end" value="sim" checked></ion-radio>
+                        <ion-radio mode="md" slot="end" value="Sim" checked></ion-radio>
                     </ion-item>
                     <ion-item lines="none" float="right" class="right-radio">
                         <ion-label>Não</ion-label>
-                        <ion-radio mode="md" slot="end" value="nao"></ion-radio>
+                        <ion-radio mode="md" slot="end" value="Nao"></ion-radio>
                     </ion-item>
                 </ion-radio-group>
                 <p></p>
-                <div *ngIf="form.form.value.participation == 'sim'">
+                <div *ngIf="form.form.value.participation == 'Sim'">
                     <br>
                     <ion-label style="color: var(--ion-color-ba)">Qual a sua preferencia?</ion-label>
                     <p></p>
@@ -48,30 +48,30 @@
                             <p></p>
                             <ion-item lines="none" float="left" class="left-radio">
                                     <ion-label>Manhã</ion-label>
-                                    <ion-radio mode="md" slot="end" value="saturday_morning"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Sábado_Manhã"></ion-radio>
                                 </ion-item>
                                 <ion-item lines="none" float="right" class="middle-radio">
                                     <ion-label>Tarde</ion-label>
-                                    <ion-radio mode="md" slot="end" value="saturday_evening"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Sábado_Tarde"></ion-radio>
                                 </ion-item>
                                 <ion-item lines="none" float="right" class="right-radio">
                                     <ion-label>Noite</ion-label>
-                                    <ion-radio mode="md" slot="end" value="saturday_night"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Sábado_Noite"></ion-radio>
                             </ion-item>
                         </div>
                         <p><ion-label>Domingo</ion-label></p>
                         <div style="display: inline-flex;">
                             <ion-item lines="none" float="left" class="left-radio">
                                     <ion-label>Manhã</ion-label>
-                                    <ion-radio mode="md" slot="end" value="sunday_morning"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Domingo_Manhã"></ion-radio>
                                 </ion-item>
                                 <ion-item lines="none" float="right" class="middle-radio">
                                     <ion-label>Tarde</ion-label>
-                                    <ion-radio mode="md" slot="end" value="sunday_evening"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Domingo_Tarde"></ion-radio>
                                 </ion-item>
                                 <ion-item lines="none" float="right" class="right-radio">
                                     <ion-label>Noite</ion-label>
-                                    <ion-radio mode="md" slot="end" value="sunday_night"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Domingo_Noite"></ion-radio>
                             </ion-item>
                         </div>
                     </ion-radio-group>

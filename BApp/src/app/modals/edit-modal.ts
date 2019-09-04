@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 import { HttpRequestService } from '../services/http-request.service'
 
 @Component({
   selector: 'app-edit-modal',
-  templateUrl: 'edit-modal.page.html',
-  styleUrls: ['edit-modal.page.scss']
+  templateUrl: 'edit-modal.html',
+  styleUrls: ['edit-modal.scss']
 })
 
-export class EditModal {
-  private user_info
-  private header_name
-  private cities
+export class EditModal implements OnInit {
 
+  header_name = "Rodrigo Martins"
+  user_info
+  cities
+  
   private changed_info
 
   private changed_date
@@ -22,23 +23,39 @@ export class EditModal {
     private modalController : ModalController,
     private navParams: NavParams,
     private http : HttpRequestService
-  ){}
+  ){
+    //this.header_name = this.navParams.get('header_name');
+    //this.user_info = this.navParams.get('user_info');
 
-  ionViewWillEnter() {
+    //this.formatUserInfo()
+    //this.getCities()
+  }
+
+  ngOnInit(){
     this.header_name = this.navParams.get('header_name');
     this.user_info = this.navParams.get('user_info');
+
+    console.log(JSON.stringify(this.header_name))
+    console.log(JSON.stringify(this.user_info))
 
     this.formatUserInfo()
     this.getCities()
   }
 
   formatUserInfo(){
+
+    debugger
+
     const zipcode = this.user_info['zipcode'].split(' ')
     const numbers = zipcode[0].split('-')
 
     this.user_info['frst_zip'] = numbers[0]
     this.user_info['scnd_zip'] = numbers[1]
     this.user_info['thrd_zip'] = zipcode.slice(1, zipcode.length).join(' ')
+
+    this.user_info['birth_date'] = this.user_info['birth_date'].split('T')[0]
+
+    debugger
   }
 
   getCities(){

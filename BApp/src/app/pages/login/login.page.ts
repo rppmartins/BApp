@@ -26,7 +26,7 @@ export class LoginPage {
     private storage : Storage,
     private data : DataService,
 
-    private afAuth : AngularFireAuth,
+    private afAuth : AngularFireAuth, 
     private google : GooglePlus,
   )
   {}
@@ -57,52 +57,14 @@ export class LoginPage {
 
   async executeLogin(user){
     let route = 'form'
+    
+    const volunteer = await this.tryGetVolunteer(user.email)
+    const user_id = volunteer != undefined ? volunteer['Id'] : null
 
-    const volunteer = await this.tryGetVolunteer(user)
-    const id = volunteer != undefined ? volunteer['id'] : null
+    console.log(`volunteer is : ${volunteer}`)
 
-    if(id != null && isNumber(id) && id >= 0){
-
-      user['id'] = id
-      this.storage.set('user', user)
-      
-      route = 'profile'
-    }
-    else {
-      this.data.setData('user', user)
-    }
-
-    this.navigate(route)
-  }
-
-  tryGetVolunteer(user){
-    return this.http.getVolunteer(user.email)
-    //return this.http.fetchPromise('get', `volunteers/${user.email}?filter=Email`, '')
-  }
-
-  navigate(route){
-    const routes = {
-      'form' : '/form',
-      'profile' : '/tabs/profile'
-    }
-    return this.router.navigate([routes[route]])
-  }
-  
-  async fakeLogin(){
-    debugger
-    let user = {
-      name : 'Rodrigo Martins',
-      email : 'rppmartins1996@hotmail.com', 
-      profile_url : '',
-      service : 'none'
-    }
-    let route = 'form'
-
-    const volunteer = await this.tryGetVolunteer(user)
-    const id = volunteer != undefined ? volunteer['id'] : null
-
-    if(id != null && isNumber(id) && id >= 0){
-      user['id'] = id
+    if(user_id != null && isNumber(user_id) && user_id >= 0){
+      user['id'] = user_id
       this.storage.set('user', user)
       
       route = 'profile'
@@ -114,5 +76,49 @@ export class LoginPage {
 
     this.navigate(route)
   }
+
+  tryGetVolunteer(user_email){
+    return this.http.getVolunteer(user_email, 'Email')
+  }
+
+  navigate(route){
+    const routes = {
+      'form' : '/form',
+      'profile' : '/tabs/profile'
+    }
+    return this.router.navigate([routes[route]])
+  }
   
+  async fakeLogin(){
+
+    debugger
+    
+    let user = {
+      name : 'Leandro Duarte',
+      email : 'lando@gmail.com', 
+      profile_url : '',
+      service : 'none'
+    }
+    let route = 'form'
+    
+    const volunteer = await this.tryGetVolunteer(user.email)
+    const user_id = volunteer != undefined ? volunteer['Id'] : null
+
+    debugger
+
+    console.log(`volunteer is : ${volunteer}`)
+
+    if(user_id != null && isNumber(user_id) && user_id >= 0){
+      user['id'] = user_id
+      this.storage.set('user', user)
+      
+      route = 'profile'
+    }
+    else {
+      console.log(user)
+      this.data.setData('user', user)
+    }
+
+    this.navigate(route)
+  }
 }

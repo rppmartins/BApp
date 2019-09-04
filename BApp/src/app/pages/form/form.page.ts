@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { HttpRequestService } from '../../services/http-request.service'
 import { DataService } from '../../services/data.service'
 import { Storage } from '@ionic/storage'
+import { Volunteer } from 'src/app/models/volunteer.model';
 
 
 @Component({
@@ -12,20 +13,23 @@ import { Storage } from '@ionic/storage'
   styleUrls: ['form.page.scss']
 })
 export class FormPage {
+  
   constructor(
     private router : Router,
     private platform : Platform,
     private http : HttpRequestService,
     private data : DataService,
     private storage : Storage
-  ){
-    this.login_info = this.data.getData('user')
-  }
+  ){ }
 
   private login_info
   private cities
 
   ngOnInit(){
+    
+    console.log('ngOnInit')
+    this.login_info = this.data.getData('user')
+
     this.getCities()
   }
 
@@ -45,13 +49,20 @@ export class FormPage {
   }
 
   register(form){
-    const body = JSON.stringify(
-      this.formatInfo(form.form.value)
-    )
+    
+    const form_values = this.getValues(form.form.value)
 
-    this.http.fetchPromise('post','volunteers', body)
-      .then(_ => {  
+    const body = new Volunteer(form_values, this.login_info['email']).toDao()
+
+    debugger
+
+    this.http.createVolunteer(body)
+      .then(user_id => {
+        debugger
+
+        this.login_info['id'] = user_id['ID']
         this.storage.set('user', this.login_info)
+        
         this.router.navigate(['/tabs/profile'])
       })
       .catch(err => {
@@ -60,22 +71,18 @@ export class FormPage {
       })
   }
 
-  formatInfo(info){
+  getValues(form){
     return {
-      'Name' : info.name,
-      'NIF': info.nif,
-      'Picture' : '',
-      'Nationality': info.nationality,
-      'City' : info.city,
-      'Address': info.address,
-      'ZipCode': `${info.zipcode_frst_number}-${info.zipcode_scnd_number} ${info.locality.toUpperCase()}`,
-      'Phone': info.cellphone,
-      'Telephone': info.phone,
-      'Email': this.login_info['email'],
-      'Birth_Date': info.birthdate.split("T")[0],
-      'Observations': info.observations,
-      'Spot': info.spot,
-      'Type': 'Campanha'
+      Name : `${form['name']}`,
+      NIF : `${form['nif']}`,
+      Phone : `${form['cellphone']}`,
+      Telephone : `${form['phone']}`,
+      Birth_Date : `${form['birthdate']}`,
+      Nationality : `${form['nationality']}`,
+      Address : `${form['address']}`,
+      Locality : `${form['city']}`,
+      ZipCode : `${form['zipcode_frst_number']}-${form['zipcode_scnd_number']} ${form['locality'].toUpperCase()}`,
+      Observations : `${form['observations']}`
     }
   }
 

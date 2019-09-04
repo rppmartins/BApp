@@ -26,7 +26,8 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { HttpClientModule } from '@angular/common/http';
 
 //Components
-import { EditModal } from './modals/edit-modal.page'
+import { EditModal } from './modals/edit-modal'
+import { EditPage } from './pages/edit/edit.page'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBu4nLX9UgqjU-3xLLQpXABr2OaggDyqgQ",
@@ -41,10 +42,12 @@ const firebaseConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    EditModal
+    EditModal,
+    EditPage
   ],
   entryComponents: [
     EditModal,
+    EditPage
   ],
   imports: [
     BrowserModule, 

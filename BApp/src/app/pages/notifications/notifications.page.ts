@@ -5,6 +5,8 @@ import { DataService } from '../../services/data.service'
 import { Storage } from '@ionic/storage'
 import { Platform } from '@ionic/angular';
 
+import { NotificationsEntry } from 'src/app/models/notifications-entry.model';
+
 @Component({
   selector: 'app-notifications',
   templateUrl: 'notifications.page.html',
@@ -25,7 +27,7 @@ export class NotificationsPage implements OnInit{
   
   async ngOnInit(){
     await this.getStoredInfo()
-    .then(user => this.v_id = user.id)
+      .then(user => this.v_id = user.id)
     
     this.getNotifications()
   }
@@ -40,25 +42,32 @@ export class NotificationsPage implements OnInit{
 
   checkSubmission(){
     const n_id = this.data.getData('n_id')
-    if(n_id != '') this.deleteInfo(n_id)
+    if(n_id != '') this.deleteInfo(parseInt(n_id))
   }
 
-  getNotifications(){ //if & else needed?
-    const notifications = this.data.getData('notifications')
-    if(notifications != undefined && notifications != ''){
-      this.notifications = this.formatData(notifications)
+  async getNotifications(){
+
+    debugger
+
+    const data = this.data.getData('notifications')
+    if(data != undefined && data != ''){
+      this.notifications = data.map(entry => new NotificationsEntry(entry)).reverse()
       this.refresh()
     }
     else {
-      this.http.fetchPromise('get', `volunteers/${this.v_id}/notifications`, '')
-        .then(data => { this.notifications = this.formatData(data.message) })
+      await this.http.getNotifications(this.v_id)
+        .then(data => {
+          debugger
+          this.notifications = data.map(entry => new NotificationsEntry(entry)).reverse()
+          debugger
+        })
         .catch(err => console.log('something went wrong with notifications...'))
     }
   }
 
   goBack(){
     this.saveInfo()
-    this.router.navigate(["/tabs"]) 
+    this.router.navigate(["/tabs/profile"]) 
   }
 
   read(item, id){
@@ -76,58 +85,51 @@ export class NotificationsPage implements OnInit{
     this.deleteInfo(id)
   }
 
-  refresh(event?){
+  async refresh(event?){
     const last_id = this.getLastNotificationId()
 
-    this.http.fetchPromise('get', `volunteers/${this.v_id}/notifications?last_id=${last_id}`, '')
-      .then(data => this.notifications.unshift(...this.formatData(data.message)))
+    await this.http.getLastNotifcations(this.v_id, last_id)
+      .then(data => 
+        this.notifications.unshift(...data.map(entry => new NotificationsEntry(entry)).reverse())
+      )
       .then(_ => {if(event) event.target.complete()})
-      .catch(err => console.log('something went wrong pushing new notifications...'))
+      .catch(err => {
+        console.log('something went wrong pushing new notifications...')
+      })
   }
 
   getLastNotificationId(){
-    return Math.max.apply(Math, this.notifications.map(
+    let last_id = Math.max.apply(Math, this.notifications.map(
       notification => { return notification.id; }
     ))
-  }
+    
+    debugger
 
-  formatData(data){
-    return data.map(value => {
-      return {
-        id : value['Id'],
-        c_id : value['C_Id'],
-        name : value['C_Name'],
-        type : value['Type'],
-        read : value['Read'],
-        changed : false
-      }
-    }).reverse()
+    if(last_id < 0) last_id = 0
+
+    return last_id
   }
 
   saveInfo(){
-    this.notifications.forEach(notification => {
+    this.notifications.forEach(async notification => {
       if(notification.changed) {
 
         notification.changed = false
 
-        const body = {
-          Id : notification.id,
-          C_Id : notification.c_id,
-          Name : notification.name,
-          Type : notification.type,
-          Read : notification.read
-        }
-
-        this.http.fetchPromise('put', `volunteers/${this.v_id}/notifications/${notification.id}`, body)
+        const body = notification.toDao()
+        debugger        
+        
+        await this.http.updateNotification(notification.id, body)
           .then(_ => console.log('Saved'))
           .catch(err => console.log('something went wrong with saving notification...'))
       }
     })
   }
 
-  deleteInfo(id){
-    this.http.fetchPromise('delete', `volunteers/${this.v_id}/notifications/${id}`, '')
+  async deleteInfo(id){
+    await this.http.deleteNotification(id)
       .then(_ => {
+        debugger
         this.notifications = this.notifications.filter((n) => {
           return n.id != id
         })
