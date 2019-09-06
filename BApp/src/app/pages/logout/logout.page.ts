@@ -5,7 +5,6 @@ import { Storage } from '@ionic/storage'
 
 import { AngularFireAuth } from 'angularfire2/auth'
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
-//import { Facebook } from '@ionic-native/facebook/ngx';
 
 @Component({
   selector: 'app-logout',
@@ -19,8 +18,7 @@ export class LogoutPage {
     private storage : Storage,
 
     private afAuth : AngularFireAuth,
-    private google : GooglePlus,
-    //private facebook : Facebook
+    private google : GooglePlus
   )
   {}
 
@@ -47,8 +45,7 @@ export class LogoutPage {
             this.executeLogout()
           }
         }
-      ],
-      //mode: 'ios'
+      ]
     });
 
     await alert.present();
@@ -57,6 +54,7 @@ export class LogoutPage {
   async executeLogout(){
     await this.storage.get('user')
       .then(user => {
+        console.log(user)
         if(user.service == 'google'){
           this.afAuth.auth.signOut()
           this.google.logout()
@@ -71,29 +69,3 @@ export class LogoutPage {
   navigateToProfilePage() { this.router.navigate(['/tabs/profile']) }
 
 }
-
-/*
-    this.nativeStorage.getItem('user').then( user => {
-      
-      if(user.service == 'google'){
-
-        this.google.logout()
-        .then(res => {
-          this.nativeStorage.remove('user');
-          this.navigateToLoginPage()
-        },
-        err => console.log(err)
-        )
-      }
-      else if(user.service == 'facebook'){
-        
-        this.facebook.logout()
-        .then(res =>{
-          this.nativeStorage.remove('user');
-          this.navigateToLoginPage();
-        }, 
-        error => console.log(error)
-        )
-      }
-    })
-    */

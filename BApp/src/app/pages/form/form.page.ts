@@ -56,6 +56,7 @@ export class FormPage {
     await this.http.createVolunteer(body)
       .then(user_id => {
 
+        debugger
         this.login_info['id'] = user_id['ID']
         this.storage.set('user', this.login_info)
         

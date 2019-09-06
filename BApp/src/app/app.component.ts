@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Platform, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -26,6 +26,8 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready()
       .then(async () => {
+
+        console.log('App is ready.')
       
         if(await this.checkLogin()){
           this.splashScreen.hide();
@@ -62,7 +64,11 @@ export class AppComponent {
   
   checkLogin(){
     return this.storage.get('user')
-      .then(user => { return user != null })
+      .then(user => { 
+        console.log('Got user from storage.')
+        console.log(`user -> ${JSON.stringify(user)}`)
+        return user != null 
+      })
       .catch(err => console.log('something went wrong getting v_id...'))
   }
 

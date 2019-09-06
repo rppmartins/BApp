@@ -55,31 +55,8 @@ export class LoginPage {
     this.executeLogin(user)
   }
 
-  async executeNewLogin(user){
-
-    let route = 'form'
-
-    await this.tryGetVolunteer(user.email)
-      .then(volunteer => {
-        return volunteer != undefined ? volunteer['Id'] : null
-      })
-      .then(user_id => {
-        if(user_id != null && isNumber(user_id) && user_id >= 0){
-          user['id'] = user_id
-          this.storage.set('user', user)
-          
-          route = 'profile'
-        }
-        else {
-          console.log(user)
-          this.data.setData('user', user)
-        }
-      })
-      .then(_ => this.navigate(route))
-      .catch(err => console.log('something went wrong with tryGetVolunteer'))
-  }
-
   async executeLogin(user){
+    debugger
 
     let route = 'form'
     

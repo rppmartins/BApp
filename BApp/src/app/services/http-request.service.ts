@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { Network } from '@ionic-native/network/ngx';
+
 @Injectable({
   providedIn: 'root'
 })  
 export class HttpRequestService {
 
-  constructor(private http : HttpClient) {}
+  constructor(
+    private http : HttpClient,
+    //private network : Network
+  ){}
 
   private fetch_tries = 3
 
@@ -70,6 +75,7 @@ export class HttpRequestService {
 
 
   private fetchPromise(method, uri, body){
+
     console.log(uri)
 
     return this.http[method](`${this.basic_url}${uri}`, body).toPromise()

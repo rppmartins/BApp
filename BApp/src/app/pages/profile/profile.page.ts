@@ -43,7 +43,6 @@ export class ProfilePage {
   history
 
   private notifications_flag
-  private new_image_flag = false
 
   private loading
   loaded = false
@@ -52,10 +51,7 @@ export class ProfilePage {
 
   async ngOnInit(){
     await this.getStoredInfo()
-      .then(user => this.stored_info = user)
-      .then(async _ => {
-        await this.getProfileInfo()
-      })
+    await this.getProfileInfo()
       .then(_ => this.checkNotifications())
       .catch(err => {
         debugger
@@ -66,11 +62,13 @@ export class ProfilePage {
   getStoredInfo(){
     return this.storage.get('user')
       .then(res => {
+        console.log(res)
         if(res.profile_url == '' || res.profile_url == undefined){
           res['profile_url'] = this.default_image
         }
         return res
       })
+      .then(user => this.stored_info = user)
   }
 
   async getProfileInfo(event?){
@@ -142,9 +140,7 @@ export class ProfilePage {
       image => {
         debugger
         const this_image = this.formatImage(image)
-        if(this.stored_info['profile_url'] == this.default_image){
-          this.new_image_flag = true
-        }
+        
         this.stored_info['profile_url'] = this_image
         this.storage.set('user', this.stored_info)
 
@@ -213,7 +209,7 @@ export class ProfilePage {
   }
 
   createOrUpdate(data){
-    return this.httpImage.updatePicture(this.stored_info.id, data)
+    return this.httpImage.uploadPicture(this.stored_info.id, data)
   }
 
   async presentToast(event?){
@@ -223,7 +219,7 @@ export class ProfilePage {
     const toast = await this.toastController.create({
       header: 'Ocurreu um erro...',
       message: 'Por favor verifique a sua conexão.',
-      duration: 5000
+      duration: 10000
     });
     toast.present();
   }

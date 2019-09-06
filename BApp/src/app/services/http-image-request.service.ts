@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { Network } from '@ionic-native/network/ngx';
+
 @Injectable({
   providedIn: 'root'
 })
 export class HttpImageRequestService {
 
-  constructor(private http : HttpClient) {}
+  constructor(
+    private http : HttpClient,
+    //private network : Network
+  ){}
 
   private default_image = "/assets/default_profile.jpg"
 
