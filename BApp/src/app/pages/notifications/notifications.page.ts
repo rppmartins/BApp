@@ -140,7 +140,8 @@ export class NotificationsPage implements OnInit{
       .catch(_ => console.log('something went wrong with deleting notification...'))
   }
 
-  goToNotification(id, c_id, type){
+  goToNotification(id, c_id, c_name, c_date, type){
+    //MARK AS READ
     this.saveInfo()
     const notification_routing = {
       q : `/questionnaires/${id}`,
@@ -149,7 +150,11 @@ export class NotificationsPage implements OnInit{
     }
     const extras = {
       state : {
-        c_id : c_id
+        campaign_info : {
+          c_id : c_id,
+          c_name : c_name,
+          c_date : c_date.split('T')[0]
+        }
       }
     }
     this.router.navigate([notification_routing[type]], extras)

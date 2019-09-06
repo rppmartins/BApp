@@ -12,14 +12,14 @@
         <ion-row justify-content-center>
           <ion-col align-self-center>
             <div text-center>
-                <h5 style="color:var(--ion-color-ba)">54ª Campanha de Recolha de Alimentos</h5>
+                <h5 style="color:var(--ion-color-ba)">{{campaign_info.c_name}}</h5>
             </div>
             <p padding>
                 <ion-label>
                     Este convite pretende fazer uma gestão da participação dos nossos voluntários na campanha 
                 </ion-label>
                 <ion-label style="color: var(--ion-color-ba)">
-                    Continente da Póvoa de Santa Iria, 25 e 26 de Maio de 2019
+                    da sua área a {{campaign_info.c_date}}
                 </ion-label>
             </p>
             <div text-center>
@@ -48,22 +48,22 @@
                             <p></p>
                             <ion-item lines="none" float="left" class="left-radio">
                                     <ion-label>Manhã</ion-label>
-                                    <ion-radio mode="md" slot="end" value="Sábado_Manhã"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Sabado_Manha"></ion-radio>
                                 </ion-item>
                                 <ion-item lines="none" float="right" class="middle-radio">
                                     <ion-label>Tarde</ion-label>
-                                    <ion-radio mode="md" slot="end" value="Sábado_Tarde"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Sabado_Tarde"></ion-radio>
                                 </ion-item>
                                 <ion-item lines="none" float="right" class="right-radio">
                                     <ion-label>Noite</ion-label>
-                                    <ion-radio mode="md" slot="end" value="Sábado_Noite"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Sabado_Noite"></ion-radio>
                             </ion-item>
                         </div>
                         <p><ion-label>Domingo</ion-label></p>
                         <div style="display: inline-flex;">
                             <ion-item lines="none" float="left" class="left-radio">
                                     <ion-label>Manhã</ion-label>
-                                    <ion-radio mode="md" slot="end" value="Domingo_Manhã"></ion-radio>
+                                    <ion-radio mode="md" slot="end" value="Domingo_Manha"></ion-radio>
                                 </ion-item>
                                 <ion-item lines="none" float="right" class="middle-radio">
                                     <ion-label>Tarde</ion-label>

@@ -23,15 +23,15 @@ export class InvitationPage {
   ){
     this.route.queryParams.subscribe(_ => {
       if (this.router.getCurrentNavigation().extras.state) {
-        this.c_id = this.router.getCurrentNavigation().extras.state.c_id;
+        this.campaign_info = this.router.getCurrentNavigation().extras.state.campaign_info;
       }
     })
 
     this.n_id = this.route.snapshot.paramMap.get('id')
   }
 
+  campaign_info
   private v_id
-  private c_id
   private n_id
 
   async ngOnInit(){
@@ -58,9 +58,9 @@ export class InvitationPage {
   async saveInfo(form){
     debugger
 
-    console.log('v_id: ' + this.v_id + ', n_id: ' + this.n_id + ' & c_id: ' + this.c_id)
+    console.log('v_id: ' + this.v_id + ', n_id: ' + this.n_id + ' & c_id: ' + this.campaign_info.c_id)
 
-    const body = new Invitation(this.c_id, this.v_id, form).toDao()
+    const body = new Invitation(this.campaign_info.c_id, this.v_id, form).toDao()
 
     await this.http.answerInvitation(body)
       .catch(err => console.log('something went wrong submitting answare...'))

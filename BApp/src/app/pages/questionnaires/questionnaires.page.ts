@@ -19,14 +19,14 @@ export class QuestionnairePage {
   ){
     this.route.queryParams.subscribe(_ => {
       if (this.router.getCurrentNavigation().extras.state) {
-        this.c_id = this.router.getCurrentNavigation().extras.state.c_id;
+        this.campaign_info = this.router.getCurrentNavigation().extras.state.campaign_info;
       }
     })
 
     this.n_id = this.route.snapshot.paramMap.get('id')
   }
   
-  private c_id
+  campaign_info
   private n_id
 
   goBack(submit?){ 
@@ -42,9 +42,9 @@ export class QuestionnairePage {
   async saveInfo(form){
     debugger
 
-    console.log('n_id: ' + this.n_id + ' & c_id: ' + this.c_id)
+    console.log('n_id: ' + this.n_id + ' & c_id: ' + this.campaign_info.c_id)
 
-    const body = new Questionnaire(this.c_id, form).toDao()
+    const body = new Questionnaire(this.campaign_info.c_id, form).toDao()
 
     await this.http.answerQuestionnaire(body)
       .catch(err => console.log('something went wrong submitting questionnaire...'))

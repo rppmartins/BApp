@@ -19,7 +19,7 @@
     <ion-list *ngIf="notifications.length > 0; else nothingToShow">
         <ion-item-sliding *ngFor="let notification of notifications" #item>
             <ion-item lines="none" mode="ios" button=true
-            (click)="goToNotification(notification.id, notification.c_id, notification.type)">
+            (click)="goToNotification(notification.id, notification.c_id, notification.name, notification.date, notification.type)">
                 <div *ngIf="!notification.read; else elseBlock">
                     <h5 style="color:var(--ion-color-ba)">{{notification.name}}</h5>
                 </div>
@@ -47,8 +47,9 @@
         </ion-item-sliding>
     </ion-list>
     <ng-template #nothingToShow>
+        <p></p>
         <ion-item lines="none" mode="ios" button=false text-center>
-                <ion-label>Sem Notificações.</ion-label>
+            <ion-label>Sem Notificações.</ion-label>
         </ion-item>
     </ng-template>
 </ion-content>

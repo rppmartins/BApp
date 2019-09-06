@@ -15,8 +15,15 @@ export class ThanksPage {
     private platform : Platform,
     private route : ActivatedRoute,
     private data : DataService
-  ){}
+  ){
+    this.route.queryParams.subscribe(_ => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.campaign_info = this.router.getCurrentNavigation().extras.state.campaign_info;
+      }
+    })
+  }
 
+  campaign_info
   private n_id
 
   ngOnInit(){
