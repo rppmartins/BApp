@@ -22,12 +22,11 @@ export class FormPage {
     private storage : Storage
   ){ }
 
-  private login_info
-  private cities
+  login_info
+  cities
 
   ngOnInit(){
     this.login_info = this.data.getData('user')
-
     this.getCities()
   }
 
@@ -47,6 +46,8 @@ export class FormPage {
   }
 
   async register(form){
+
+    debugger
     
     const form_values = this.getValues(form.form.value)
 

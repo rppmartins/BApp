@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpRequestService } from '../../services/http-request.service'
 import { DataService } from '../../services/data.service'
 import { Storage } from '@ionic/storage'
-import { Platform } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular'
 
 import { NotificationsEntry } from 'src/app/models/notifications-entry.model';
 
@@ -19,20 +19,25 @@ export class NotificationsPage implements OnInit{
     private platform : Platform,
     private http : HttpRequestService,
     private data : DataService,
-    private storage : Storage
+    private storage : Storage,
+    private loadingController : LoadingController,
   ){}
 
   private v_id
-  private notifications
+
+  notifications
+
+  private loading
   
   async ngOnInit(){
     await this.getStoredInfo()
       .then(user => this.v_id = user.id)
     
     this.getNotifications()
+      .then(_ => this.loading.dismiss())
   }
 
-  ionViewWillEnter(){
+  ionViewDidEnter(){
     this.checkSubmission()
   }
 
@@ -47,9 +52,13 @@ export class NotificationsPage implements OnInit{
 
   async getNotifications(){
 
-    debugger
+    this.loading = await this.loadingController.create({
+      message: 'A obter notificações...'
+    });
+    this.loading.present()
 
     const data = this.data.getData('notifications')
+    
     if(data != undefined && data != ''){
       this.notifications = data.map(entry => new NotificationsEntry(entry)).reverse()
       this.refresh()
@@ -57,9 +66,7 @@ export class NotificationsPage implements OnInit{
     else {
       await this.http.getNotifications(this.v_id)
         .then(data => {
-          debugger
           this.notifications = data.map(entry => new NotificationsEntry(entry)).reverse()
-          debugger
         })
         .catch(err => console.log('something went wrong with notifications...'))
     }
@@ -114,8 +121,7 @@ export class NotificationsPage implements OnInit{
 
         notification.changed = false
 
-        const body = notification.toDao()
-        debugger        
+        const body = notification.toDao()  
         
         await this.http.updateNotification(notification.id, body)
           .then(_ => console.log('Saved'))
@@ -127,7 +133,6 @@ export class NotificationsPage implements OnInit{
   async deleteInfo(id){
     await this.http.deleteNotification(id)
       .then(_ => {
-        debugger
         this.notifications = this.notifications.filter((n) => {
           return n.id != id
         })

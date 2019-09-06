@@ -1,14 +1,17 @@
 import { Component, ɵConsole } from '@angular/core'
 import { Router } from '@angular/router';
 import { Platform, ModalController, LoadingController, ToastController, AlertController } from '@ionic/angular';
-import { EditPage } from '../edit/edit.page'
-import { HttpRequestService } from '../../services/http-request.service'
-import { DataService } from '../../services/data.service'
-import { Storage } from '@ionic/storage'
 import { finalize } from 'rxjs/operators';
 
+import { HttpRequestService } from '../../services/http-request.service'
+import { HttpImageRequestService } from '../../services/http-image-request.service'
+import { DataService } from '../../services/data.service'
+import { Storage } from '@ionic/storage'
+
+import { EditPage } from '../edit/edit.page'
+
 import { Volunteer } from '../../models/volunteer.model'
-import { VolunteerView } from '../..//view-model/volunteer.view-model';
+import { VolunteerView } from '../../view-model/volunteer.view-model';
 import { HistoryEntry } from '../../models/history-entry.model'
 import { Participations } from '../../models/participations.model';
 
@@ -24,51 +27,68 @@ export class ProfilePage {
     private storage : Storage,
     private data : DataService, 
     private http : HttpRequestService,
+    private httpImage : HttpImageRequestService,
     private platform : Platform,
     private modalController: ModalController,
     private loadingController : LoadingController,
-    private toastController : ToastController,
-    private alertController : AlertController
+    private toastController : ToastController
   ){} 
 
   private stored_info
   
   private user
-  private user_view
 
-  private participations
-  private history
+  user_view
+  participations
+  history
 
   private notifications_flag
   private new_image_flag = false
 
   private loading
+  loaded = false
 
-  private loaded = false
+  private default_image = "/assets/default_profile.jpg"
 
   async ngOnInit(){
-    
     await this.getStoredInfo()
       .then(user => this.stored_info = user)
       .then(async _ => {
-        await this.getUser()
-        await this.getParticipations()
-        await this.getHistory()
+        await this.getProfileInfo()
       })
-      .then(_ => {
-        this.loaded = true
-        this.checkNotifications()
+      .then(_ => this.checkNotifications())
+      .catch(err => {
+        debugger
+        this.presentToast()
       })
-      .catch(err => alert(err))
   }
   
   getStoredInfo(){
     return this.storage.get('user')
       .then(res => {
         if(res.profile_url == '' || res.profile_url == undefined){
-          res['profile_url'] = "/assets/default_profile.jpg"
+          res['profile_url'] = this.default_image
         }
         return res
+      })
+  }
+
+  async getProfileInfo(event?){
+    this.loading = await this.loadingController.create({
+      message: 'A obter dados...'
+    });
+    this.loading.present()
+
+    this.getUser()
+    this.getParticipations()
+    this.getHistory()
+      .then(_ => {
+        this.loaded = true
+        this.loading.dismiss()
+      })
+      .then(_ => {if(event) event.target.complete()})
+      .catch(err => {
+        this.presentToast(event)
       })
   }
 
@@ -79,7 +99,6 @@ export class ProfilePage {
         this.user = new Volunteer(data, this.stored_info.email)
         this.setView()
       })
-      .catch(err => console.log(`something went wrong with user! : ${err}`))
   }
 
   setView(){
@@ -92,7 +111,6 @@ export class ProfilePage {
         this.participations = new Participations(data)  
       })
       .then(_ => console.log('got participations in profile'))
-      .catch(err => console.log('something went wrong getting participations...'))
   }
 
   getHistory(){
@@ -101,14 +119,11 @@ export class ProfilePage {
         console.log('got history in profile')
         this.history = data.map(entry => new HistoryEntry(entry))
       })
-      .catch(err => console.log(`something went wrong with history! : ${err}`))
   }
 
   checkNotifications() {
     this.http.getNotifications(this.stored_info.id)
       .then(data => {
-        debugger
-
         this.data.setData('notifications', data)
       
         if(data.some(value => { return !value['Display'] }))
@@ -125,20 +140,19 @@ export class ProfilePage {
 
     camera.getPicture(
       image => {
+        debugger
         const this_image = this.formatImage(image)
-        if(this.stored_info['profile_url'] == undefined){
-
-          this.stored_info['profile_url'] = this_image
-          this.storage.set('user', this.stored_info)
-          
+        if(this.stored_info['profile_url'] == this.default_image){
           this.new_image_flag = true
         }
-        this.user_view['profile_url'] = this_image
+        this.stored_info['profile_url'] = this_image
+        this.storage.set('user', this.stored_info)
+
         this.upload(image);
       },
       err => console.log(err),
       {
-        sourceType: camera['PictureSourceType'].PHOTOLIBRARY,
+        sourceType: camera['PictureSourceType'].SAVEDPHOTOALBUM,
         destinationType: camera['DestinationType'].FILE_URI,
         quality: 100,
         encodingType: camera['EncodingType'].JPEG,
@@ -147,7 +161,6 @@ export class ProfilePage {
   }
 
   formatImage(url){
-    debugger
     if (!url) { return url }
     if (url.startsWith('/')) { return window['WEBVIEW_SERVER_URL'] + '/_app_file_' + url }
     if (url.startsWith('file://')) { return window['WEBVIEW_SERVER_URL'] + url.replace('file://', '/_app_file_') }
@@ -157,7 +170,7 @@ export class ProfilePage {
 
   async upload(image_uri: any) {
     this.loading = await this.loadingController.create({
-      message: 'Uploading...'
+      message: 'Gravando alterações...'
     });
 
     this.loading.present();
@@ -171,39 +184,51 @@ export class ProfilePage {
   }
 
   readFile(image_file) {
-    const reader = new FileReader();
+    const reader = new FileReader()
+
     reader.onloadend = () => {
       const form_data = new FormData();
       const image_blob = new Blob([reader.result], {type: image_file.type});
+      
       form_data.append('file', image_blob, image_file.name);
-      this.postData(form_data);
-    };
+      
+      this.postImage(form_data);
+    }
     reader.readAsArrayBuffer(image_file);
   }
 
-  postData(data, id?) {
+  postImage(data) {
+    debugger
 
-    const body = {
-      'VoluntaryId' : id,
-      'VoluntaryImage' : data
-    }
+    const body = { 'voluntaryImage' : data }
 
-    createOrUpdate(this.new_image_flag, body, id)
-      .then(res => {
-        finalize(this.loading.dismiss()) //this.showToast(true)
-      })
-      .catch(err => console.log(err)) //this.showToast(false)
-
-    function createOrUpdate(is_new, data, v_id?){
-      return is_new ? this.http.createPicture(data) : this.http.updatePicture(v_id, data)
-    }
+    this.createOrUpdate(body)
+      .subscribe(
+        data => this.loading.dismiss(), 
+        error => {
+          console.log(error)
+          this.loading.dismiss()
+        }
+      )
   }
 
-  editInfo(){
-    this.presentEditModal()
+  createOrUpdate(data){
+    return this.httpImage.updatePicture(this.stored_info.id, data)
   }
 
-  async presentEditModal(){
+  async presentToast(event?){
+    if(event) event.target.complete()
+    this.loading.dismiss()
+
+    const toast = await this.toastController.create({
+      header: 'Ocurreu um erro...',
+      message: 'Por favor verifique a sua conexão.',
+      duration: 5000
+    });
+    toast.present();
+  }
+
+  async editInfo(){
     const modal = await this.modalController.create({
       component : EditPage,
       componentProps: {
@@ -222,7 +247,6 @@ export class ProfilePage {
   }
 
   saveInfo(){
-    console.log(this.user)
     const body = this.user.toDao()
 
     this.http.updateVolunteer(this.stored_info.id, body)

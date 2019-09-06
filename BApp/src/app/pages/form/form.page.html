@@ -50,11 +50,11 @@
                 <ion-item></ion-item>
                 <p></p>
                 <ion-item lines="none">
-                    <ion-input id="cellphone" name="cellphone" type="tel" maxlength="15" placeholder="Telemóvel *" ngModel required></ion-input>
+                    <ion-input id="cellphone" name="cellphone" type="tel" (keypress)="permitMaxSize($event, 15)" placeholder="Telemóvel *" ngModel required></ion-input>
                 </ion-item>
                 <p></p>
                 <ion-item lines="none">
-                    <ion-input id="phone" name="phone" type="tel" maxlength="15" placeholder="Telefone" ngModel></ion-input>
+                    <ion-input id="phone" name="phone" type="tel" (keypress)="permitMaxSize($event, 15)" placeholder="Telefone" ngModel></ion-input>
                 </ion-item>
                 <p></p>
                 <ion-item lines="none">
@@ -66,7 +66,7 @@
                 </ion-item>
                 <p></p>
                 <ion-item lines="none">
-                    <ion-textarea name="observations" placeholder="Observations" clearOnEdit="true" ngModel></ion-textarea>
+                    <ion-textarea name="observations" placeholder="Observações" clearOnEdit="true" ngModel></ion-textarea>
                 </ion-item>
                 <p></p>
                 <ion-radio-group name="spot" ngModel required>

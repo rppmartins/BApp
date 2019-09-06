@@ -29,7 +29,7 @@ export class EditPage {
     const header_name = this.navParams.get('header_name');
     this.user_info = this.navParams.get('user_info');
 
-    this.formatUserInfo("Rodrigo Martins")
+    this.formatUserInfo(header_name)
     this.getCities()
   }
 
@@ -79,6 +79,8 @@ export class EditPage {
     if(this.changed_zip)
       this.user_info['zipcode'] = `${this.user_info['frst_zip']}-${this.user_info['scnd_zip']} ${this.user_info['thrd_zip']}`
    
+      
+    delete this.user_info['header_name']
     delete this.user_info['frst_zip']
     delete this.user_info['scnd_zip']
     delete this.user_info['thrd_zip']

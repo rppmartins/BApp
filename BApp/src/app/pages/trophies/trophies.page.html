@@ -7,6 +7,14 @@
 
 <ion-content text-center>
 
+    <ion-refresher slot="fixed"
+    (ionRefresh)="getTopParticipants($event)">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        refreshingSpinner="circles">
+        </ion-refresher-content>
+    </ion-refresher>
+
   <ion-img style="width: 100px; height: 100px; margin: auto; padding-top: 20px; padding-bottom: 20px" src="/assets/trophie.png"></ion-img>
 
   <ion-list lines="none">

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpRequestService } from '../../services/http-request.service'
 import { TrophiesEntry } from 'src/app/models/trophies-entry.model';
+import { HttpImageRequestService } from 'src/app/services/http-image-request.service';
 
 @Component({
   selector: 'app-trophies',
@@ -8,33 +9,53 @@ import { TrophiesEntry } from 'src/app/models/trophies-entry.model';
   styleUrls: ['trophies.page.scss']
 })
 export class TrophiesPage {
+  constructor(
+    private http: HttpRequestService,
+    private httpImage: HttpImageRequestService
+  ){}
 
-  private participants
+  private default_image = "/assets/default_profile.jpg"
 
-  constructor(private http: HttpRequestService){}
+  participants
 
   ngOnInit(){
     this.getTopParticipants()
   }
 
-  getTopParticipants(){
-    
+  getTopParticipants(event?){
     this.http.getTrophies()
-      .then(data => this.participants = data.map(entry => new TrophiesEntry(entry)))
-      .then(_ => this.setAvatars())
+      .then(data => {
+        this.participants = data.map(entry => new TrophiesEntry(entry))
+      })
+      .then(_ => {
+        if(event) event.target.complete()
+        this.setAvatars()
+      })
       .catch(_ => console.log('something went wrong getting trophies...'))
   }
 
   setAvatars(){
-    this.participants.forEach( async participant => {
-      participant['avatar'] = await this.getAvatar(participant.id)
+    this.participants.forEach(participant => {
+      this.getAvatar(participant)
     })
   }
 
-  getAvatar(id){
-    return this.http.getPicture(id)
-      .then(data => data.message)
-      .catch(_ => console.log('something went wrong getting avatar...'))
+  getAvatar(participant){
+    this.httpImage.getPicture(participant.id)
+      .subscribe(data => {
+        this.createImageFromBlob(participant,data);
+      }, error => {
+        participant['avatar'] = this.default_image
+      });
   }
+
+  createImageFromBlob(participant, image) {
+    let reader = new FileReader();
+    reader.onloadend = () => {
+      participant['avatar']= reader.result
+    };
+ 
+    reader.readAsDataURL(image)
+ }
   
 }

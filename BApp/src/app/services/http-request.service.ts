@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Participations } from '../models/participations.model';
 
 @Injectable({
   providedIn: 'root'
 })  
 export class HttpRequestService {
 
-  constructor(private http : HttpClient) { }
+  constructor(private http : HttpClient) {}
 
   private fetch_tries = 3
 
@@ -24,16 +23,6 @@ export class HttpRequestService {
   }
   updateVolunteer(v_id, body){
     return this.fetchPromise('put', `volunteers/${v_id}`, body)
-  }
-  //-------------------------------------------------------------------------Picture
-  createPicture(body){
-    return this.fetchPromise('post', `picture`, body)
-  }
-  getPicture(v_id){
-    return this.fetchPromise('get', `picture/${v_id}`, '')
-  }
-  updatePicture(v_id, body){
-    return this.fetchPromise('put', `picture/${v_id}`, body)
   }
   //-------------------------------------------------------------------------Participations
   getParticipations(v_id){
@@ -71,7 +60,7 @@ export class HttpRequestService {
   }
   //-------------------------------------------------------------------------CheckIn
   checkIn(v_id, c_id){
-    return this.fetchPromise('post', `volunteer/${v_id}/campaign/${c_id}`, {'Certified': false})
+    return this.fetchPromise('post', `volunteers/${v_id}/campaign/${c_id}`, {'Certified': false})
   }
   //-------------------------------------------------------------------------Cities
   fetchCitiesPromise(){
@@ -85,19 +74,21 @@ export class HttpRequestService {
 
     return this.http[method](`${this.basic_url}${uri}`, body).toPromise()
       .then(res => {
+        console.log(`response -> ${JSON.stringify(res)}`)
         this.fetch_tries = 2
         return res
       })
       .catch(err => {
+        console.log(`main error -> ${JSON.stringify(err)}`)
         console.log(`error -> ${JSON.stringify(err.error.error)}`)
 
-        console.log(`tries = ${this.fetch_tries}`)
         if(this.fetch_tries > 0) {
           this.fetch_tries -= 1
           this.fetchPromise(method, uri, body)
         }
         else {
           console.log('something went wrong resolving fetch...')
+
           this.fetch_tries = 2
           return null
         }

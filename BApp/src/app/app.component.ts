@@ -19,8 +19,7 @@ export class AppComponent {
     private statusBar: StatusBar,
     private router: Router,
     private storage : Storage,
-  ) {
-    
+  ){
     this.initializeApp();
   }
 
@@ -85,8 +84,7 @@ export class AppComponent {
             navigator['app'].exitApp()
           }
         }
-      ],
-      //mode: 'ios'
+      ]
     });
   
     await alert.present();

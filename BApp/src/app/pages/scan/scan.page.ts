@@ -35,20 +35,6 @@ export class ScanPage {
     this.scanCode(); 
   }
 
-  betaScan(){
-    const campaign_info_str = `{ 
-      "ba_indentifier": "https://www.bancoalimentar.pt/", 
-      "campaign_id": 2, "campaign_name": "Lisboa 18/19" 
-    }`
-
-    const campaign_info = JSON.parse(campaign_info_str)
-
-    if(campaign_info.ba_indentifier != undefined){ 
-      this.presentConfimationAlert(campaign_info.campaign_id, campaign_info.campaign_name)
-    }
-    else this.presentErrorAlert()
-  }
-  
   scanCode(){
     this.qrScanner.scan()
       .then(qrData => {
@@ -92,8 +78,7 @@ export class ScanPage {
               .catch(err => console.log(err))
           }
         }
-      ],
-      mode: 'ios'
+      ]
     });
 
     await alert.present();
@@ -108,11 +93,10 @@ export class ScanPage {
         {
           text: 'OK',
           handler: () => {
-            //
+            this.navigateToProfile()
           }
         }
-      ],
-      //mode: 'ios'
+      ]
     })
 
     await alert.present();
@@ -131,7 +115,14 @@ export class ScanPage {
   checkIn(campaign_id){
 
     return this.http.checkIn(this.v_id, campaign_id)
-      .then(res => console.log(res))
+      .then(res => {
+        console.log(res)
+        this.navigateToProfile()
+      })
       .catch(_ => console.log('something went wrong cheking in...'))
+  }
+
+  navigateToProfile(){
+    this.router.navigate(['/tabs/profile'])
   }
 }

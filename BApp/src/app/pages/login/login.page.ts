@@ -55,10 +55,33 @@ export class LoginPage {
     this.executeLogin(user)
   }
 
-  async executeLogin(user){
+  async executeNewLogin(user){
+
     let route = 'form'
 
-    debugger
+    await this.tryGetVolunteer(user.email)
+      .then(volunteer => {
+        return volunteer != undefined ? volunteer['Id'] : null
+      })
+      .then(user_id => {
+        if(user_id != null && isNumber(user_id) && user_id >= 0){
+          user['id'] = user_id
+          this.storage.set('user', user)
+          
+          route = 'profile'
+        }
+        else {
+          console.log(user)
+          this.data.setData('user', user)
+        }
+      })
+      .then(_ => this.navigate(route))
+      .catch(err => console.log('something went wrong with tryGetVolunteer'))
+  }
+
+  async executeLogin(user){
+
+    let route = 'form'
     
     const volunteer = await this.tryGetVolunteer(user.email)
     const user_id = volunteer != undefined ? volunteer['Id'] : null
@@ -90,8 +113,6 @@ export class LoginPage {
   }
   
   async fakeLogin(){
-
-    debugger
     
     let user = {
       name : 'Rodrigo Martins',

@@ -25,9 +25,6 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 //Services
 import { HttpClientModule } from '@angular/common/http';
 
-//Components
-import { EditPage } from './pages/edit/edit.page'
-
 const firebaseConfig = {
   apiKey: "AIzaSyBu4nLX9UgqjU-3xLLQpXABr2OaggDyqgQ",
   authDomain: "bancoalimentar-1991.firebaseapp.com",
@@ -40,11 +37,9 @@ const firebaseConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent,
-    //EditPage
+    AppComponent
   ],
   entryComponents: [
-    //EditPage
   ],
   imports: [
     BrowserModule, 
@@ -65,7 +60,7 @@ const firebaseConfig = {
     //Camera,             //used to access camera
     File,                 //used to upload file
     WebView,              //??
-    FilePath,
+    FilePath
   ],
   bootstrap: [AppComponent]
 })
