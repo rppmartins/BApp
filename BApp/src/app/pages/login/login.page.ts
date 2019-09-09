@@ -59,6 +59,8 @@ export class LoginPage {
     debugger
 
     let route = 'form'
+
+    await this.apiLogin(user.email)
     
     const volunteer = await this.tryGetVolunteer(user.email)
     const user_id = volunteer != undefined ? volunteer['Id'] : null
@@ -77,6 +79,15 @@ export class LoginPage {
     this.navigate(route)
   }
 
+  apiLogin(email){
+    return this.http.login({'Email' : email})
+      .then(token => this.storage.set('token', token['token']))
+      .catch(err => {
+        console.log(err)
+        this.navigate('login')
+      })
+  }
+
   tryGetVolunteer(user_email){
     return this.http.getVolunteer(user_email, 'Email')
   }
@@ -84,7 +95,8 @@ export class LoginPage {
   navigate(route){
     const routes = {
       'form' : '/form',
-      'profile' : '/tabs/profile'
+      'profile' : '/tabs/profile',
+      'login' : '/login'
     }
     return this.router.navigate([routes[route]])
   }

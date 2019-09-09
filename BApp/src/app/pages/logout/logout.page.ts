@@ -62,6 +62,8 @@ export class LogoutPage {
       })
       
       this.storage.remove('user')
+      this.storage.remove('token')
+      
       this.navigateToLoginPage()
   }
   
