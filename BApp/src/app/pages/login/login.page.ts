@@ -90,6 +90,9 @@ export class LoginPage {
 
   tryGetVolunteer(user_email){
     return this.http.getVolunteer(user_email, 'Email')
+      .then(err => {
+        console.log(err)
+      })
   }
 
   navigate(route){

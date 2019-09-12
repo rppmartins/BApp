@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 
 import { Network } from '@ionic-native/network/ngx';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class HttpRequestService {
 
   constructor(
     private http : HttpClient,
+    private storage : Storage,
     //private network : Network
   ){}
 
@@ -17,7 +19,11 @@ export class HttpRequestService {
 
   private basic_url = 'https://bagv.azurewebsites.net/api/'
   private api_key = ''
-  
+
+ 
+  login(body){
+    return this.fetchPromise('post', 'login', body)
+  }
   //-------------------------------------------------------------------------Volunteer
   createVolunteer(body){
     return this.fetchPromise('post', `volunteers`, body)
@@ -74,17 +80,59 @@ export class HttpRequestService {
   }
 
 
-  private fetchPromise(method, uri, body){
-
+  private async fetchPromise(method, uri, body){
     console.log(uri)
 
-    return this.http[method](`${this.basic_url}${uri}`, body).toPromise()
+    debugger
+
+    const url = `${this.basic_url}${uri}`
+    const headers = await this.getHeaders()
+
+    debugger
+
+    /*
+    return new Promise((res, rej) => {
+      this.http[method](url, body, headers).toPromise()
+        .then(response => {
+
+          console.log(`response -> ${JSON.stringify(response)}`)
+          
+          this.fetch_tries = 2
+          res(response)
+        })
+        .catch(err => {
+
+          console.log(`main error -> ${JSON.stringify(err)}`)
+          console.log(`error -> ${JSON.stringify(err.error.error)}`)
+  
+          if(this.fetch_tries > 0) {
+            this.fetch_tries -= 1
+            this.fetchPromise(method, uri, body)
+          }
+          else {
+            console.log('something went wrong resolving fetch...')
+          
+            this.fetch_tries = 2  
+            rej('Error after 3 tries...')
+          }
+        })
+    })
+    .catch(err => {
+      debugger
+      console.log(err)
+    })
+    */
+
+    
+    return this.http[method](url, body, {headers:headers}).toPromise() 
       .then(res => {
         console.log(`response -> ${JSON.stringify(res)}`)
+        
         this.fetch_tries = 2
         return res
       })
       .catch(err => {
+
         console.log(`main error -> ${JSON.stringify(err)}`)
         console.log(`error -> ${JSON.stringify(err.error.error)}`)
 
@@ -98,6 +146,16 @@ export class HttpRequestService {
           this.fetch_tries = 2
           return null
         }
-      })
+      })    
+    
+  }
+
+  private async getHeaders(){
+    const token = await this.storage.get('token')
+    const res = `Berear ${token}`
+
+    debugger  
+
+    return {'Authorization' : res}
   }
 }
