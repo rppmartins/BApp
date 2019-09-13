@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
 
 import { Network } from '@ionic-native/network/ngx';
 import { Storage } from '@ionic/storage';
+import { tokenKey } from '@angular/core/src/view';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,7 @@ export class HttpRequestService {
  
   login(body){
     return this.fetchPromise('post', 'login', body)
+      .then(res => res.token)
   }
   //-------------------------------------------------------------------------Volunteer
   createVolunteer(body){
@@ -75,7 +77,7 @@ export class HttpRequestService {
   }
   //-------------------------------------------------------------------------Cities
   fetchCitiesPromise(){
-    const cities_url = 'http://api.ipma.pt/open-data/distrits-islands.json'
+    const cities_url = 'http://api.ipma.pt/open-data/distrits-islands'
     return this.http.get(cities_url).toPromise()
   }
 
@@ -83,48 +85,11 @@ export class HttpRequestService {
   private async fetchPromise(method, uri, body){
     console.log(uri)
 
-    debugger
-
     const url = `${this.basic_url}${uri}`
-    const headers = await this.getHeaders()
 
     debugger
 
-    /*
-    return new Promise((res, rej) => {
-      this.http[method](url, body, headers).toPromise()
-        .then(response => {
-
-          console.log(`response -> ${JSON.stringify(response)}`)
-          
-          this.fetch_tries = 2
-          res(response)
-        })
-        .catch(err => {
-
-          console.log(`main error -> ${JSON.stringify(err)}`)
-          console.log(`error -> ${JSON.stringify(err.error.error)}`)
-  
-          if(this.fetch_tries > 0) {
-            this.fetch_tries -= 1
-            this.fetchPromise(method, uri, body)
-          }
-          else {
-            console.log('something went wrong resolving fetch...')
-          
-            this.fetch_tries = 2  
-            rej('Error after 3 tries...')
-          }
-        })
-    })
-    .catch(err => {
-      debugger
-      console.log(err)
-    })
-    */
-
-    
-    return this.http[method](url, body, {headers:headers}).toPromise() 
+    return this.http[method](url, body).toPromise() 
       .then(res => {
         console.log(`response -> ${JSON.stringify(res)}`)
         
@@ -146,7 +111,8 @@ export class HttpRequestService {
           this.fetch_tries = 2
           return null
         }
-      })    
+      }) 
+         
     
   }
 

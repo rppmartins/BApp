@@ -22,19 +22,18 @@ export class HttpImageRequestService {
 
   
   getPicture(v_id){
-    return this.fetchPromise('get', `picture/${v_id}`, {responseType: 'blob'})
+    return this.fetchPromise('get', `picture/${v_id}`, '', {responseType: 'blob'})
   }
   uploadPicture(v_id, body){
-    return this.fetchPromise('put', `picture/${v_id}`, {authorization : `Bearer ${this.getToken()}`}, body)
+    return this.fetchPromise('put', `picture/${v_id}`, body)
   }
   
 
-  private fetchPromise(method, uri, header, body?){
-    if(body) return this.http[method](`${this.basic_url}${uri}`, (body), header)
-    return this.http[method](`${this.basic_url}${uri}`, header)
-  }
+  private fetchPromise(method, uri, body, header?){
 
-  private async getToken(){
-    return await this.storage.get('token')
+    const url = `${this.basic_url}${uri}`
+
+    if(header) return this.http[method](url, header)
+    return this.http[method](url, body)
   }
 }

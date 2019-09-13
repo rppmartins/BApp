@@ -16,10 +16,15 @@ export class DataService {
   getData(id) {
     const return_data = this.data[id]
     if(return_data != undefined){
-      delete this.data[id]
-
+      if(id != 'token') delete this.data[id]
       return return_data
     }
     return ''
+  }
+
+  //VER ISTOOOOOOOO
+
+  clearData(){
+    this.data = {}
   }
 }

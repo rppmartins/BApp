@@ -61,9 +61,13 @@ export class LoginPage {
     let route = 'form'
 
     await this.apiLogin(user.email)
+
+    debugger
     
     const volunteer = await this.tryGetVolunteer(user.email)
     const user_id = volunteer != undefined ? volunteer['Id'] : null
+
+    debugger
 
     if(user_id != null && isNumber(user_id) && user_id >= 0){
       user['id'] = user_id
@@ -81,7 +85,7 @@ export class LoginPage {
 
   apiLogin(email){
     return this.http.login({'Email' : email})
-      .then(token => this.storage.set('token', token['token']))
+      .then(token => this.data.setData('token', `Bearer ${token}`))
       .catch(err => {
         console.log(err)
         this.navigate('login')
@@ -90,9 +94,6 @@ export class LoginPage {
 
   tryGetVolunteer(user_email){
     return this.http.getVolunteer(user_email, 'Email')
-      .then(err => {
-        console.log(err)
-      })
   }
 
   navigate(route){
@@ -108,7 +109,7 @@ export class LoginPage {
     
     let user = {
       name : 'Rodrigo Martins',
-      email : 'rppmartins1996@gmail.com', 
+      email : 'rppmartfghjbins1996@gmail.com', 
       profile_url : '',
       service : 'none'
     }

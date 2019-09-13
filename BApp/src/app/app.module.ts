@@ -23,7 +23,10 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 
 //Services
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
+//Interceptor
+import { HeadersInterceptor } from '../app/interceptors/headers.interceptor';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBu4nLX9UgqjU-3xLLQpXABr2OaggDyqgQ",
@@ -34,7 +37,6 @@ const firebaseConfig = {
   messagingSenderId: "518579261265",
   appId: "1:518579261265:web:d88be0cae42b44a6"
 }
-
 @NgModule({
   declarations: [
     AppComponent
@@ -59,8 +61,13 @@ const firebaseConfig = {
     LocalNotifications,   //used to send Notifications
     //Camera,             //used to access camera
     File,                 //used to upload file
-    WebView,              //??
-    FilePath
+    WebView,
+    FilePath,
+    {
+      provide: HTTP_INTERCEPTORS, //regist headers
+      useClass: HeadersInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

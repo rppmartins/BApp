@@ -1,7 +1,6 @@
 import { Component, ɵConsole } from '@angular/core'
 import { Router } from '@angular/router';
 import { Platform, ModalController, LoadingController, ToastController, AlertController } from '@ionic/angular';
-import { finalize } from 'rxjs/operators';
 
 import { HttpRequestService } from '../../services/http-request.service'
 import { HttpImageRequestService } from '../../services/http-image-request.service'

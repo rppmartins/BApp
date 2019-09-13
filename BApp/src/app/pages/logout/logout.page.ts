@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage'
+import { DataService } from '../../services/data.service'
 
 import { AngularFireAuth } from 'angularfire2/auth'
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
@@ -16,6 +17,7 @@ export class LogoutPage {
     private router: Router, 
     private alertController: AlertController,
     private storage : Storage,
+    private data : DataService,
 
     private afAuth : AngularFireAuth,
     private google : GooglePlus
@@ -61,8 +63,8 @@ export class LogoutPage {
         }
       })
       
+      this.data.clearData()
       this.storage.remove('user')
-      this.storage.remove('token')
       
       this.navigateToLoginPage()
   }
